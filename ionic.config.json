@@ -1,0 +1,7 @@
+{
+  "name": "bot-anuncio",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}

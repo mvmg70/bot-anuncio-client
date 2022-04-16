@@ -1,0 +1,27 @@
+.slide-x-left-enter-active,
+.slide-x-left-leave-active {
+  transition: all 0.35s ease;
+}
+.slide-x-left-enter-from {
+  opacity: 0;
+  transform: translateX(50%);
+}
+.slide-x-left-leave-to {
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+.expand-y-enter-active,
+.expand-y-leave-active {
+  transition: all 0.35s ease;
+}
+.expand-y-enter-from {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(50%);
+}
+.expand-y-leave-to {
+  opacity: 0;
+  max-height: 350px;
+  transform: translateY(50%);
+}
