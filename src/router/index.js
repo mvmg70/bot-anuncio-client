@@ -38,7 +38,7 @@ const routes = [
         redirect: "/auth/login",
       },
       {
-        path: "register/:share",
+        path: "register",
         name: "Register",
         component: () => import("@/views/auth/Register.vue"),
       },
