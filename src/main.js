@@ -48,6 +48,8 @@ import "./style/main.scss";
 
 import "./registerServiceWorker";
 
+const NODE_ENV = process.env.NODE_ENV;
+
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
@@ -57,6 +59,7 @@ const app = createApp(App)
   .mixin({
     data() {
       return {
+        node_env_mode: NODE_ENV,
         localStorage: new Storage(),
         i: allIcons,
         theme: "light",
