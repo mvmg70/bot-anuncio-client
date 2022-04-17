@@ -90,18 +90,12 @@ const app = createApp(App)
       getIcon(name) {
         return this.i[name];
       },
-      var(variable) {
-        return getComputedStyle(document.querySelector("body")).getPropertyValue(variable);
-      },
 
       handleResize() {
         this.windowSize.width = window.innerWidth;
         this.windowSize.height = window.innerHeight;
       },
 
-      setloadApp(status) {
-        this.loadApp = status;
-      },
       async changeTheme() {
         this.toggleClassTheme(this.theme);
         await this.setLocalStorage("theme", this.theme);

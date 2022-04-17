@@ -59,7 +59,7 @@
             <div class="header-banner">
               <Splide :options="imagesOptions">
                 <SplideSlide v-for="(image, index) in ads.images" :key="index">
-                  <img :src="image" @click="expandImage(image)" />
+                  <img :src="image" @click="expandImage(image)" alt="" />
                 </SplideSlide>
               </Splide>
             </div>
@@ -69,7 +69,7 @@
         <!--
         <ion-modal :is-open="isExpand" css-class="modal-imagem-expand" @didDismiss="isExpand = false">
           <ion-content>
-            <img :src="imageExpand ? imageExpand : '/assets/logo/favicon-16x16.png'" />
+            <img :src="imageExpand ? imageExpand : '/assets/logo/favicon-16x16.png'"  alt=""/>
           </ion-content>
         </ion-modal>
 -->

@@ -17,7 +17,7 @@
           </ion-button>
           <ion-button v-else color="light-gray" fill="solid" class="only-avatar" router-link="/profile">
             <ion-avatar>
-              <img :src="currentUser.photoURL" referrerpolicy="no-referrer" />
+              <img :src="currentUser.photoURL" referrerpolicy="no-referrer" alt="" />
             </ion-avatar>
           </ion-button>
         </ion-buttons>
@@ -92,7 +92,7 @@
           <div v-for="(item, index) in allAds" :key="index">
             <div class="card-ad-content-x" @click="opemAd(item.id)">
               <div class="cover">
-                <img :src="item.images[0]" />
+                <img :src="item.images[0]" alt="" />
               </div>
               <div class="content">
                 <div class="card-superior-info">

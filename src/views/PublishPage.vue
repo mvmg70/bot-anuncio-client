@@ -91,7 +91,7 @@
                 <ion-label class="large">Adicione Imagens do seu anúncio</ion-label>
                 <div class="grid-images">
                   <div class="rect" v-for="(image, index) in form.images" :key="index">
-                    <img :src="image" />
+                    <img :src="image" alt="" />
                     <div class="delete" @click="removeFile(index)">Remover</div>
                   </div>
                   <div class="rect plus" v-if="form.images.length < 6">

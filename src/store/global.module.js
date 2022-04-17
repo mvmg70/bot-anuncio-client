@@ -13,5 +13,9 @@ export const globalStore = {
       state.loadApp = status;
     },
   },
-  getters: {},
+  getters: {
+    loadApp(state) {
+      return state.loadApp;
+    },
+  },
 };

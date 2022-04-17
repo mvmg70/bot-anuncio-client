@@ -54,7 +54,7 @@
         <div class="container" v-else>
           <div class="grid-profile">
             <div class="picture">
-              <img :src="getImageLink()" referrerpolicy="no-referrer" />
+              <img :src="getImageLink()" referrerpolicy="no-referrer" alt="" />
             </div>
             <div class="infos">
               <div class="name">{{ currentUser.displayName }}</div>
@@ -98,7 +98,7 @@
             <ion-row>
               <ion-col size="6" sizeSm="4" size-md="3" v-for="ads in allMyAds" :key="ads.id">
                 <div class="ads-card-cover">
-                  <img :src="ads.images[0]" />
+                  <img :src="ads.images[0]" alt="" />
                   <div class="title">{{ ads.title }}</div>
                   <div class="views"><ion-icon :src="getIcon('eyeOutline')"></ion-icon> {{ ads.views }}</div>
                   <div class="isActive" :class="[ads.active]">{{ status(ads.active) }}</div>
