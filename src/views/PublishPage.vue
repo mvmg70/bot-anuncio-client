@@ -183,6 +183,7 @@ import { loadingController } from "@ionic/vue";
 import { mapActions, mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { getCEP } from "@/services/api.service";
+import { upload } from "../services/upload.service";
 
 export default defineComponent({
   name: "PublishPage",
@@ -287,6 +288,7 @@ export default defineComponent({
       formView: 1,
       interval: null,
       timeBound: 500,
+      imagesFile: [],
     };
   },
   watch: {
@@ -320,7 +322,21 @@ export default defineComponent({
           spinner: "circular",
         });
         await loading.present();
+
         this.form.price = parseInt(this.form.price);
+
+        var images = this.imagesFile;
+        console.log(images);
+        var links = [];
+
+        for (let index in images) {
+          images[index].name = "testet";
+          await upload(images[index]).then((link) => {
+            links.push(link);
+          });
+        }
+
+        this.form.images = links;
 
         await this.saveAds({ ads: this.form, id: this.currentUser.id });
         this.formView += 1;
@@ -345,19 +361,17 @@ export default defineComponent({
       }
       return "";
     },
-    loadFiles(e) {
+    async loadFiles(e) {
       let file = e.target.files[0];
 
       if (this.form.images.length < 6) {
-        const Image = new FileReader();
-        Image.onload = (e) => {
-          this.form.images.push(e.target.result);
-        };
-        Image.readAsDataURL(file);
+        this.form.images.push(URL.createObjectURL(file));
+        this.imagesFile.push(file);
       }
     },
     removeFile(index) {
       this.form.images.splice(index, 1);
+      this.imagesFile.splice(index, 1);
     },
     toglePayment(value) {
       console.log(value);

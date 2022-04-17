@@ -143,10 +143,11 @@ export default {
             (error) => {
               loading.dismiss();
               this.loading = false;
-              this.$toast.error({
-                title: "Erro ao fazer login",
-                description: (error.response && error.response.data) || error.message || error.toString(),
-              });
+              console.error(error);
+              // this.$toast.error({
+              //   title: "Erro ao fazer login",
+              //   description: (error.response && error.response.data) || error.message || error.toString(),
+              // });
             }
           )
           .catch((error) => {
@@ -163,10 +164,11 @@ export default {
           () => {},
           (error) => {
             this.loading = false;
-            this.$toast.error({
-              title: "Erro ao fazer login",
-              description: (error.response && error.response.data) || error.message || error.toString(),
-            });
+            console.error(error);
+            // this.$toast.error({
+            //   title: "Erro ao fazer login",
+            //   description: (error.response && error.response.data) || error.message || error.toString(),
+            // });
           }
         )
         .catch((error) => {

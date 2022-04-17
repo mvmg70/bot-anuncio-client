@@ -8,11 +8,13 @@
 
         <ion-title> Perfil </ion-title>
 
+        <!--
         <ion-buttons slot="end">
           <ion-button color="light-gray" fill="none" class="only-icon" @click="socialShareOpem = true">
             <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
           </ion-button>
         </ion-buttons>
+        -->
       </ion-toolbar>
     </ion-header>
 
@@ -273,10 +275,11 @@ export default defineComponent({
               },
               (error) => {
                 loading.dismiss();
-                this.$toast.error({
-                  title: "Erro ao salvar tente novamente",
-                  description: (error.response && error.response.data) || error.message || error.toString(),
-                });
+                console.error(error);
+                //this.$toast.error({
+                //  title: "Erro ao salvar tente novamente",
+                //  description: (error.response && error.response.data) || error.message || error.toString(),
+                //});
               }
             )
             .catch((error) => {
@@ -301,10 +304,11 @@ export default defineComponent({
               },
               (error) => {
                 loading.dismiss();
-                this.$toast.error({
-                  title: "Erro ao salvar, tente novamente",
-                  description: (error.response && error.response.data) || error.message || error.toString(),
-                });
+                console.error(error);
+                // this.$toast.error({
+                //   title: "Erro ao salvar, tente novamente",
+                //   description: (error.response && error.response.data) || error.message || error.toString(),
+                // });
               }
             )
             .catch((error) => {
@@ -332,6 +336,8 @@ export default defineComponent({
 #ProfilePage {
   ion-title {
     text-align: center;
+    padding-left: unset;
+    padding: 0;
     &::first-letter {
       text-transform: uppercase;
     }

@@ -50,9 +50,13 @@ const routes = [
     ],
   },
   {
-    path: "/não-encontrada/:type",
+    path: "/nao-encontrada/:type",
     name: "NotFound",
     component: () => import("@/errors/NotFound.vue"),
+  },
+  {
+    path: "/*",
+    redirect: "/nao-encontrada/page",
   },
 ];
 

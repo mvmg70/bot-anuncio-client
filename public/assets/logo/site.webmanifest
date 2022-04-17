@@ -1,5 +1,5 @@
 {
-    "name": "BotAnuncio",
+    "name": "BotAnuncio — Anuncie com facilidade!",
     "short_name": "BotAnuncio",
     "icons": [
         {
@@ -50,7 +50,7 @@
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "start_url": "https://domainaqui.com/",
+    "start_url": "https://botanuncio.com.br/",
     "display": "standalone",
     "orientation": "portrait"
 }
