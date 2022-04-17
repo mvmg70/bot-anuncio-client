@@ -48,7 +48,7 @@
                 <template #default="{ item }">
                   <div @click="opemAd(item.id)">
                     <ion-card class="card-ad-content">
-                      <ion-img :src="item.images[0]"></ion-img>
+                      <ion-img :src="item.images[0]" alt=""></ion-img>
 
                       <ion-card-header>
                         <div class="left-side">
