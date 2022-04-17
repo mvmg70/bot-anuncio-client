@@ -54,10 +54,6 @@ const routes = [
     name: "NotFound",
     component: () => import("@/errors/NotFound.vue"),
   },
-  {
-    path: "/*",
-    redirect: "/nao-encontrada/page",
-  },
 ];
 
 const router = createRouter({
