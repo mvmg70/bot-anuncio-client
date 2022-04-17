@@ -326,7 +326,6 @@ export default defineComponent({
         this.form.price = parseInt(this.form.price);
 
         var images = this.imagesFile;
-        console.log(images);
         var links = [];
 
         for (let index in images) {
@@ -374,7 +373,6 @@ export default defineComponent({
       this.imagesFile.splice(index, 1);
     },
     toglePayment(value) {
-      console.log(value);
       let indexPayment = this.form.paymentAccepted.indexOf(value);
       if (indexPayment == -1) {
         this.form.paymentAccepted.push(value);

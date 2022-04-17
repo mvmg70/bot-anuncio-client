@@ -12,7 +12,6 @@ class Auth {
         };
 
         var saveUser = await this.setUser(newUser);
-        console.log(saveUser);
         return saveUser;
       }
       return currentUser;

@@ -80,7 +80,6 @@ export default {
         });
 
         await loading.present();
-        console.log(this.$store.state.count);
 
         this.$store
           .dispatch("auth/login", this.user)
@@ -99,8 +98,8 @@ export default {
           )
           .catch((error) => {
             loading.dismiss();
-            console.log(error.code);
-            console.log(error.message);
+            console.error(error.code);
+            console.error(error.message);
           });
       }
     },
@@ -119,8 +118,8 @@ export default {
           }
         )
         .catch((error) => {
-          console.log(error.code);
-          console.log(error.message);
+          console.error(error.code);
+          console.error(error.message);
         });
     },
   },

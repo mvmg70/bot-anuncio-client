@@ -152,8 +152,8 @@ export default {
           )
           .catch((error) => {
             loading.dismiss();
-            console.log(error);
-            console.log(error.message);
+            console.error(error);
+            console.error(error.message);
           });
       }
     },
@@ -172,12 +172,9 @@ export default {
           }
         )
         .catch((error) => {
-          console.log(error.code);
-          console.log(error.message);
+          console.error(error.code);
+          console.error(error.message);
         });
-    },
-    setScore(score) {
-      console.log(score);
     },
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");

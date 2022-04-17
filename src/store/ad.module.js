@@ -8,8 +8,9 @@ export const adStore = {
   }),
 
   actions: {
-    async getAds({ commit }) {
-      let filter = "?filter=%7B%22offset%22%3A0%2C%22limit%22%3A50%2C%22where%22%3A%7B%22active%22%3A%22approved%22%7D%7D";
+    async getAds({ commit }, uf = null) {
+      let filter = `?filter=%7B%22where%22%3A%7B%22active%22%3A%22approved%22%7D%7D`;
+      if (uf) filter = `?filter=%7B%22where%22%3A%7B%22active%22%3A%22approved%22%2C%22locale.uf%22%3A%22${uf.split("-")[1]}%22%7D%7D`;
 
       commit("START_LOAD_ADS");
       var ads = await get("ads" + filter);
@@ -18,7 +19,7 @@ export const adStore = {
     },
 
     async searchAds({ commit }, search) {
-      let filter = `?filter=%7B%22offset%22%3A%200%2C%20%22limit%22%3A%2050%2C%20%22where%22%3A%20%7B%20%22active%22%3A%20%22approved%22%2C%20%22title%22%3A%20%7B%20%22regexp%22%3A%20%22${search}%22%20%7D%7D%7D`;
+      let filter = `?filter=%7B%22offset%22%3A%200%2C%20%22limit%22%3A%2050%2C%20%22where%22%3A%20%7B%20%22active%22%3A%20%22approved%22%2C%22locale.uf%22%3A%22SP%22%2C%20%22title%22%3A%20%7B%20%22regexp%22%3A%20%22${search}%22%20%7D%7D%7D`;
 
       commit("START_LOAD_ADS");
       var ads = await get("ads" + filter);

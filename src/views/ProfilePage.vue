@@ -211,7 +211,6 @@ export default defineComponent({
   },
   mounted() {
     this.getMyAds();
-    console.log(this.currentUser);
   },
   methods: {
     ...mapActions("user", ["getMyAds", "update"]),
@@ -284,8 +283,8 @@ export default defineComponent({
             )
             .catch((error) => {
               loading.dismiss();
-              console.log(error.code);
-              console.log(error.message);
+              console.error(error.code);
+              console.error(error.message);
             });
         }
       }
@@ -313,8 +312,8 @@ export default defineComponent({
             )
             .catch((error) => {
               loading.dismiss();
-              console.log(error.code);
-              console.log(error.message);
+              console.error(error.code);
+              console.error(error.message);
             });
         }
       }

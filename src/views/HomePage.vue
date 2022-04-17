@@ -74,7 +74,7 @@
       </div>
 
       <section class="map-mode" :class="{ visibled: mode == 'map' }" v-show="mode == 'map'" v-if="userLocale.latitude">
-        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]" @move="log()">
+        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]">
           <l-tile-layer :url="url" :attribution="attribution" />
           <l-control-zoom position="bottomright" />
           <l-control-attribution :position="attributionPosition" />
@@ -155,17 +155,14 @@ export default defineComponent({
         perPage: 1,
         perMove: 1,
         focus: "center",
-        lazyLoad: true,
-        autoplay: true,
-        pauseOnHover: true,
-        pauseOnFocus: true,
       },
       mode: "normal",
     };
   },
   mounted() {
+    let uf = this.userLocale.principalSubdivisionCode;
     this.getBanners();
-    this.getAds();
+    this.getAds(uf);
   },
   computed: {
     ...mapGetters("banner", ["allBanners", "isLoadingBanners"]),
@@ -184,7 +181,7 @@ export default defineComponent({
     ...mapActions("banner", ["getBanners"]),
     ...mapActions("ad", ["getAds"]),
     log($e) {
-      console.log($e);
+      return $e;
     },
     opemAd(id) {
       this.$router.push({
