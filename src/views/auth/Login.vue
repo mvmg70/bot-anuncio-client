@@ -80,7 +80,6 @@ export default {
         });
 
         await loading.present();
-        console.log(this.$store.state.count);
 
         this.$store
           .dispatch("auth/login", this.user)
@@ -90,16 +89,17 @@ export default {
             },
             (error) => {
               loading.dismiss();
-              this.$toast.error({
-                title: "Erro ao fazer login",
-                description: (error.response && error.response.data) || error.message || error.toString(),
-              });
+              console.error(error);
+              // this.$toast.error({
+              //   title: "Erro ao fazer login",
+              //   description: (error.response && error.response.data) || error.message || error.toString(),
+              // });
             }
           )
           .catch((error) => {
             loading.dismiss();
-            console.log(error.code);
-            console.log(error.message);
+            console.error(error.code);
+            console.error(error.message);
           });
       }
     },
@@ -110,15 +110,16 @@ export default {
           () => {},
           (error) => {
             this.loading = false;
-            this.$toast.error({
-              title: "Erro ao fazer login",
-              description: (error.response && error.response.data) || error.message || error.toString(),
-            });
+            console.error(error);
+            // this.$toast.error({
+            //   title: "Erro ao fazer login",
+            //   description: (error.response && error.response.data) || error.message || error.toString(),
+            // });
           }
         )
         .catch((error) => {
-          console.log(error.code);
-          console.log(error.message);
+          console.error(error.code);
+          console.error(error.message);
         });
     },
   },

@@ -16,9 +16,7 @@ export const userStore = {
       commit("FINISH_LOAD_USER");
     },
     async update({ commit, state }, data) {
-      console.log(state);
-      var ads = await path(`users/${state.current.id}`, data);
-      console.log(ads);
+      await path(`users/${state.current.id}`, data);
       commit("FINISH_LOAD_USER");
     },
     async getUserLocale({ commit }) {

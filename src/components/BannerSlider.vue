@@ -3,7 +3,13 @@
     <div class="banner-conatiner" v-if="load">
       <ion-skeleton-text animated></ion-skeleton-text>
     </div>
-    <div class="banner-conatiner" v-else :style="`background-image: url(${isMobile ? bannerData.image_mobile : bannerData.image}`" @click="opemLink(bannerData.url)"></div>
+    <div
+      class="banner-conatiner"
+      v-else
+      :class="{ url: bannerData.url }"
+      :style="`background-image: url(${isMobile ? bannerData.image_mobile : bannerData.image}`"
+      @click="opemLink(bannerData.url)"
+    ></div>
   </div>
 </template>
 
@@ -22,11 +28,13 @@ export default {
   },
   methods: {
     opemLink(url) {
-      let id = url.split("/");
-      this.$router.push({
-        name: "ViewAd",
-        params: { id: id[4] },
-      });
+      if (url) {
+        let id = url.split("/");
+        this.$router.push({
+          name: "ViewAd",
+          params: { id: id[4] },
+        });
+      }
     },
   },
 };
@@ -54,6 +62,9 @@ export default {
     max-height: 350px;
     border-radius: 12px;
     margin: 0;
+  }
+  &.url:hover {
+    cursor: pointer;
   }
 }
 </style>

@@ -38,7 +38,7 @@ const routes = [
         redirect: "/auth/login",
       },
       {
-        path: "register/:share",
+        path: "register",
         name: "Register",
         component: () => import("@/views/auth/Register.vue"),
       },
@@ -50,7 +50,7 @@ const routes = [
     ],
   },
   {
-    path: "/não-encontrada/:type",
+    path: "/nao-encontrada/:type",
     name: "NotFound",
     component: () => import("@/errors/NotFound.vue"),
   },

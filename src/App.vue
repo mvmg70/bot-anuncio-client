@@ -1,5 +1,8 @@
 <template>
   <ion-app>
+    <metainfo>
+      <template v-slot:title="{ content }">{{ content ? `${content} | SITE_NAME` : `SITE_NAME` }}</template>
+    </metainfo>
     <div class="label-fixed-dev" v-if="node_env_mode === 'development'">Ambiente de testes</div>
     <ion-router-outlet />
   </ion-app>

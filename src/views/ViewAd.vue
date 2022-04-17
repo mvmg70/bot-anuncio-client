@@ -6,7 +6,7 @@
           <ion-back-button default-href="/" color="dark" text=""></ion-back-button>
         </ion-buttons>
 
-        <ion-title>
+        <ion-title slot="center">
           {{ ads ? ads.title : "Carregando ..." }}
         </ion-title>
       </ion-toolbar>
@@ -118,7 +118,7 @@ export default defineComponent({
         gap: 24,
         arrows: false,
         pagination: true,
-        focus: 1,
+        focus: "center",
         trimSpace: false,
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
         breakpoints: {
@@ -163,8 +163,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 #ViewAdPage {
-  ion-title {
-    text-align: center;
+  ion-title.ios.title-default {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: auto 48px !important;
     &::first-letter {
       text-transform: uppercase;
     }

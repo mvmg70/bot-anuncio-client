@@ -74,9 +74,9 @@
       </div>
 
       <section class="map-mode" :class="{ visibled: mode == 'map' }" v-show="mode == 'map'" v-if="userLocale.latitude">
-        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]" @move="log()">
+        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]">
           <l-tile-layer :url="url" :attribution="attribution" />
-          <l-control-zoom :position="zoomPosition" />
+          <l-control-zoom position="bottomright" />
           <l-control-attribution :position="attributionPosition" />
           <l-control-scale :imperial="false" />
           <l-marker :lat-lng="[userLocale.latitude, userLocale.longitude]">
@@ -146,7 +146,6 @@ export default defineComponent({
       attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       bannersOptions: {
-        type: "loop",
         speed: 400,
         width: "100%",
         gap: 24,
@@ -155,17 +154,15 @@ export default defineComponent({
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
         perPage: 1,
         perMove: 1,
-        lazyLoad: true,
-        autoplay: true,
-        pauseOnHover: true,
-        pauseOnFocus: true,
+        focus: "center",
       },
       mode: "normal",
     };
   },
   mounted() {
+    let uf = this.userLocale.principalSubdivisionCode;
     this.getBanners();
-    this.getAds();
+    this.getAds(uf);
   },
   computed: {
     ...mapGetters("banner", ["allBanners", "isLoadingBanners"]),
@@ -184,7 +181,7 @@ export default defineComponent({
     ...mapActions("banner", ["getBanners"]),
     ...mapActions("ad", ["getAds"]),
     log($e) {
-      console.log($e);
+      return $e;
     },
     opemAd(id) {
       this.$router.push({
@@ -233,7 +230,7 @@ export default defineComponent({
         height: 100vh;
         margin-top: 0;
       }
-      height: calc(100vh - 44px) !important;
+      height: calc(100vh - 44px);
       margin-top: 44px;
     }
   }
