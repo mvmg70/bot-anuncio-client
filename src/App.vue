@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { defineComponent } from "vue";
 
@@ -34,8 +35,15 @@ export default defineComponent({
       this.setDeviceTheme();
     }
 
-    this.$store.dispatch("user/getUserLocale");
     this.changeTheme();
+  },
+  computed: {
+    ...mapGetters("global", ["loadApp"]),
+  },
+  watch: {
+    loadApp(value) {
+      if (!value) this.$store.dispatch("user/getUserLocale");
+    },
   },
 });
 </script>

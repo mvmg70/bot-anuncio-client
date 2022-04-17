@@ -152,16 +152,18 @@ ul.splide__pagination {
   .splide__pagination__page {
     background-color: var(--ion-color-primary);
     opacity: 0.2;
-    border-radius: 4px;
-    width: 8px;
-    height: 8px;
+    border-radius: 40px;
+    width: 80px;
+    height: 80px;
     transition: all 0.35s;
+    zoom: 0.1;
   }
   .is-active {
     opacity: 1;
     background-color: var(--ion-color-primary);
-    width: 16px;
-    height: 8px;
+    width: 160px;
+    height: 80px;
+    zoom: 0.1;
     transform: scale(1);
     opacity: 0.8;
   }
