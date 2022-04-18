@@ -316,3 +316,8 @@ ul.splide__pagination {
     color: var(--ion-color-danger);
   }
 }
+
+// force state
+.ads-content {
+  display: block !important;
+}

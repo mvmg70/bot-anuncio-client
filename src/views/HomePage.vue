@@ -62,13 +62,13 @@
         </section>
       </div>
 
-      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="userLocale.latitude && mode == 'map'">
-        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]">
+      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="mode == 'map'">
+        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="centerMap">
           <l-tile-layer :url="url" :attribution="attribution" />
           <l-control-zoom position="bottomleft" />
           <l-control-attribution :position="attributionPosition" />
           <l-control-scale :imperial="false" />
-          <l-marker :lat-lng="[userLocale.latitude, userLocale.longitude]">
+          <l-marker :lat-lng="centerMap">
             <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinPerson.png" />
           </l-marker>
           <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.lat, item.locale.lon]">
@@ -143,7 +143,7 @@ export default defineComponent({
         perMove: 1,
         focus: "center",
       },
-      mode: "normal",
+      mode: "map",
     };
   },
   mounted() {
@@ -160,6 +160,11 @@ export default defineComponent({
     },
     dynamicAnchor() {
       return [this.iconWidth / 2, this.iconHeight * 1];
+    },
+    centerMap() {
+      let center = [this.userLocale.latitude ? this.userLocale.latitude : -23.5564529, this.userLocale.longitude ? this.userLocale.longitude : -46.6618604];
+      console.log(center);
+      return center;
     },
   },
   watch: {
