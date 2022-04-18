@@ -42,7 +42,12 @@ export default {
   watch: {
     searchValue(newValue) {
       clearInterval(this.interval);
-      if (newValue.length < 3) return;
+      if (newValue.length < 3) {
+        this.interval = setInterval(() => {
+          this.search("");
+        }, 500);
+        return;
+      }
       this.interval = setInterval(() => {
         this.search(newValue);
       }, 500);
@@ -50,12 +55,13 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["userLocale"]),
+    ...mapGetters("add", ["allAds"]),
   },
   methods: {
-    ...mapActions("ad", ["searchAds"]),
+    ...mapActions("ad", ["getAds"]),
     search(value) {
       clearInterval(this.interval);
-      this.searchAds(value);
+      this.getAds({ search: value });
     },
     updateValue() {
       this.$emit("input", this.searchValue);

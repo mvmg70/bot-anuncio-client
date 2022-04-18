@@ -74,7 +74,7 @@
           <l-marker :lat-lng="centerMap">
             <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinPerson.png" />
           </l-marker>
-          <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.lat, item.locale.lon]">
+          <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.latitude, item.locale.longitude]">
             <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinLocation.png" />
           </l-marker>
         </l-map>
@@ -170,9 +170,8 @@ export default defineComponent({
     },
   },
   watch: {
-    userLocale(value) {
-      let uf = value.principalSubdivisionCode;
-      this.getAds(uf);
+    userLocale() {
+      this.getAds();
     },
   },
   methods: {
