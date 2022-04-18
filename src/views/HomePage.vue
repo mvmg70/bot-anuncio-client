@@ -40,7 +40,7 @@
         <section>
           <div class="container">
             <div class="ads-content" v-if="isLoadingAds"><card-ads :isLoad="true" /></div>
-            <div class="ads-content" v-if="allAds" style="display: block !important">
+            <div class="ads-content" v-if="allAds" style="display: block !important" v-show="true">
               <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
                 <ion-img :src="item.images[0]" alt=""></ion-img>
                 <ion-card-header>
