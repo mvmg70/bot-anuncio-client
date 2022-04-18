@@ -143,7 +143,7 @@ export default defineComponent({
         perMove: 1,
         focus: "center",
       },
-      mode: "map",
+      mode: "normal",
     };
   },
   mounted() {
