@@ -14,57 +14,51 @@
 
     <ion-content :fullscreen="true">
       <div class="load" v-if="isLoading">
-        <section>
-          <div class="container">
-            <div class="header-banner">
-              <ion-skeleton-text animated style="width: 100%; height: 350px"></ion-skeleton-text>
+        <div class="container">
+          <div class="header-banner">
+            <ion-skeleton-text animated style="width: 100%; height: 350px"></ion-skeleton-text>
+          </div>
+
+          <div class="content">
+            <div class="card-superior-info">
+              <div class="title">
+                <ion-skeleton-text animated style="width: 250px; height: 24px"></ion-skeleton-text>
+              </div>
+              <div class="price">
+                <ion-skeleton-text animated style="width: 70px; height: 24px"></ion-skeleton-text>
+              </div>
             </div>
 
-            <div class="content">
-              <div class="card-superior-info">
-                <div class="title">
-                  <ion-skeleton-text animated style="width: 250px; height: 24px"></ion-skeleton-text>
-                </div>
-                <div class="price">
-                  <ion-skeleton-text animated style="width: 70px; height: 24px"></ion-skeleton-text>
-                </div>
-              </div>
+            <div class="locale"><ion-skeleton-text animated style="width: 200px; height: 16px"></ion-skeleton-text></div>
 
-              <div class="locale"><ion-skeleton-text animated style="width: 200px; height: 16px"></ion-skeleton-text></div>
+            <div class="title-page left-text small"><ion-skeleton-text animated style="width: 150px; height: 16px"></ion-skeleton-text></div>
+            <div class="container-box">
+              <ion-skeleton-text animated style="width: 100px; height: 32px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 60px; height: 32px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 120px; height: 32px"></ion-skeleton-text>
+            </div>
 
-              <div class="title-page left-text small"><ion-skeleton-text animated style="width: 150px; height: 16px"></ion-skeleton-text></div>
-              <div class="container-box">
-                <ion-skeleton-text animated style="width: 100px; height: 32px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 60px; height: 32px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 120px; height: 32px"></ion-skeleton-text>
-              </div>
-
-              <div class="descriprion">
-                <ion-skeleton-text animated style="width: 95%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 98%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 97%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 100%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 99%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 96%; height: 24px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 60%; height: 24px"></ion-skeleton-text>
-              </div>
+            <div class="descriprion">
+              <ion-skeleton-text animated style="width: 95%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 98%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 97%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 100%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 99%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 96%; height: 24px"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 60%; height: 24px"></ion-skeleton-text>
             </div>
           </div>
-        </section>
+        </div>
       </div>
 
-      <div v-if="ads && !isLoading">
-        <section>
-          <div class="container">
-            <div class="header-banner">
-              <Splide :options="imagesOptions">
-                <SplideSlide v-for="(image, index) in ads.images" :key="index">
-                  <img :src="image" @click="expandImage(image)" alt="" />
-                </SplideSlide>
-              </Splide>
-            </div>
-          </div>
-        </section>
+      <section v-if="ads && !isLoading">
+        <div class="header-banner">
+          <Splide :options="imagesOptions">
+            <SplideSlide v-for="(image, index) in ads.images" :key="index">
+              <img :src="image" @click="expandImage(image)" alt="" />
+            </SplideSlide>
+          </Splide>
+        </div>
 
         <!--
         <ion-modal :is-open="isExpand" css-class="modal-imagem-expand" @didDismiss="isExpand = false">
@@ -73,32 +67,30 @@
           </ion-content>
         </ion-modal>
 -->
-        <section>
-          <div class="container">
-            <div class="content">
-              <div class="card-superior-info">
-                <div class="title">{{ ads.title }}</div>
-                <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
-                <div class="type" v-else>{{ isTypeTransaction(ads.type) }}</div>
-              </div>
+        <div class="container">
+          <div class="content">
+            <div class="card-superior-info">
+              <div class="title">{{ ads.title }}</div>
+              <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
+              <div class="type" v-else>{{ isTypeTransaction(ads.type) }}</div>
+            </div>
 
-              <div class="locale">{{ getAdress(ads.locale) }}</div>
-              <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(ads.created_at) }}</div>
+            <div class="locale">{{ getAdress(ads.locale) }}</div>
+            <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(ads.created_at) }}</div>
 
-              <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">
-                <div class="title-page left-text small">Pagamentos Aceitos:</div>
-                <div class="container-box">
-                  <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>
-                </div>
-              </div>
-
-              <div class="descriprion">
-                <p>{{ ads.description }}</p>
+            <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">
+              <div class="title-page left-text small">Pagamentos Aceitos:</div>
+              <div class="container-box">
+                <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>
               </div>
             </div>
+
+            <div class="descriprion">
+              <p>{{ ads.description }}</p>
+            </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </ion-content>
   </ion-page>
 </template>

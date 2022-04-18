@@ -21,46 +21,45 @@
         </ion-buttons>
       </div>
 
-      <div v-if="mode == 'normal'">
-        <section>
-          <div class="container">
-            <div class="header-banner">
-              <Splide :options="bannersOptions">
-                <SplideSlide v-if="isLoadingBanners">
-                  <Banner load />
-                </SplideSlide>
-                <SplideSlide v-else v-for="(banner, index) in allBanners" :key="index">
-                  <Banner :bannerData="banner" :load="false" />
-                </SplideSlide>
-              </Splide>
-            </div>
+      <section v-if="mode == 'normal'">
+        <div class="container">
+          <div class="header-banner">
+            <Splide :options="bannersOptions">
+              <SplideSlide v-if="isLoadingBanners">
+                <Banner load />
+              </SplideSlide>
+              <SplideSlide v-else v-for="(banner, index) in allBanners" :key="index">
+                <Banner :bannerData="banner" :load="false" />
+              </SplideSlide>
+            </Splide>
           </div>
-        </section>
+        </div>
 
-        <section>
-          <div class="container">
-            <div class="ads-content" v-if="isLoadingAds"><card-ads :isLoad="true" /></div>
-            <div class="ads-content" v-if="allAds" style="display: block !important" v-show="true">
-              <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
-                <ion-img :src="item.images[0]" alt=""></ion-img>
-                <ion-card-header>
-                  <div class="left-side">
-                    <ion-card-title>{{ item.title }}</ion-card-title>
-                    <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
-                  </div>
-                  <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
-                  <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
-                </ion-card-header>
-                <ion-card-content>
-                  <p>
-                    {{ item.description }}
-                  </p>
-                </ion-card-content>
-              </ion-card>
-            </div>
+        <div class="container" v-if="isLoadingAds">
+          <div class="ads-content"><card-ads :isLoad="true" /></div>
+        </div>
+
+        <div class="container" v-if="allAds">
+          <div class="ads-content" style="display: block !important" v-show="true">
+            <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
+              <ion-img :src="item.images[0]" alt=""></ion-img>
+              <ion-card-header>
+                <div class="left-side">
+                  <ion-card-title>{{ item.title }}</ion-card-title>
+                  <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
+                </div>
+                <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
+                <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
+              </ion-card-header>
+              <ion-card-content>
+                <p>
+                  {{ item.description }}
+                </p>
+              </ion-card-content>
+            </ion-card>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="mode == 'map'">
         <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="centerMap">
