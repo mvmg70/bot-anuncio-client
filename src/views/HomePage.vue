@@ -21,54 +21,57 @@
         </ion-buttons>
       </div>
 
-      <div v-show="mode == 'normal'">
-        <section>
-          <div class="container">
-            <div class="header-banner">
-              <Splide :options="bannersOptions">
-                <SplideSlide v-if="isLoadingBanners">
-                  <Banner load />
-                </SplideSlide>
-                <SplideSlide v-else v-for="(banner, index) in allBanners" :key="index">
-                  <Banner :bannerData="banner" :load="false" />
-                </SplideSlide>
-              </Splide>
+      <section v-if="mode == 'normal'">
+        <div class="container">
+          <div class="header-banner">
+            <Splide :options="bannersOptions">
+              <SplideSlide v-if="isLoadingBanners">
+                <Banner load />
+              </SplideSlide>
+              <SplideSlide v-else v-for="(banner, index) in allBanners" :key="index">
+                <Banner :bannerData="banner" :load="false" />
+              </SplideSlide>
+            </Splide>
+          </div>
+        </div>
+
+        <div class="container" v-if="isLoadingAds">
+          <div class="cards-content">
+            <div v-for="item in 12" :key="item">
+              <ion-skeleton-text animated style="width: 100%; height: 200px; border-radius: 12px; margin: 6px"></ion-skeleton-text>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section>
-          <div class="container">
-            <div class="ads-content" v-if="isLoadingAds"><card-ads :isLoad="true" /></div>
-            <div class="ads-content" v-else>
-              <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
-                <ion-img :src="item.images[0]" alt=""></ion-img>
-                <ion-card-header>
-                  <div class="left-side">
-                    <ion-card-title>{{ item.title }}</ion-card-title>
-                    <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
-                  </div>
-                  <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
-                  <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
-                </ion-card-header>
-                <ion-card-content>
-                  <p>
-                    {{ item.description }}
-                  </p>
-                </ion-card-content>
-              </ion-card>
-            </div>
+        <div class="container" v-if="allAds">
+          <div class="cards-content" style="display: block !important" v-show="true">
+            <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
+              <ion-img :src="item.images[0]" alt=""></ion-img>
+              <ion-card-header>
+                <div class="left-side">
+                  <ion-card-title>{{ item.title }}</ion-card-title>
+                  <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
+                </div>
+                <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
+                <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
+              </ion-card-header>
+              <ion-card-content>
+                <p>
+                  {{ item.description }}
+                </p>
+              </ion-card-content>
+            </ion-card>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
-      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="userLocale.latitude && mode == 'map'">
-        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]">
+      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="mode == 'map'">
+        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="centerMap">
           <l-tile-layer :url="url" :attribution="attribution" />
           <l-control-zoom position="bottomleft" />
           <l-control-attribution :position="attributionPosition" />
           <l-control-scale :imperial="false" />
-          <l-marker :lat-lng="[userLocale.latitude, userLocale.longitude]">
+          <l-marker :lat-lng="centerMap">
             <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinPerson.png" />
           </l-marker>
           <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.lat, item.locale.lon]">
@@ -76,7 +79,7 @@
           </l-marker>
         </l-map>
 
-        <div class="ads-map-box">
+        <div class="map-box">
           <div v-for="(item, index) in allAds" :key="index">
             <div class="card-ad-content-x" @click="opemAd(item.id)">
               <div class="cover">
@@ -160,6 +163,10 @@ export default defineComponent({
     },
     dynamicAnchor() {
       return [this.iconWidth / 2, this.iconHeight * 1];
+    },
+    centerMap() {
+      let center = [this.userLocale.latitude ? this.userLocale.latitude : -23.5564529, this.userLocale.longitude ? this.userLocale.longitude : -46.6618604];
+      return center;
     },
   },
   watch: {
@@ -302,7 +309,7 @@ export default defineComponent({
     }
   }
 
-  .ads-content {
+  .cards-content {
     margin-bottom: 48px;
     column-count: 4;
     column-gap: 10px;
@@ -317,7 +324,7 @@ export default defineComponent({
     }
   }
 
-  .ads-map-box {
+  .map-box {
     position: absolute;
     bottom: 24px;
     left: 0;

@@ -83,12 +83,12 @@
         </div>
       </section>
 
-      <section class="ads-container">
+      <section class="cards-container">
         <div class="container" v-if="isLoadingMyAds">
           <ion-grid>
             <ion-row>
               <ion-col size="6" sizeSm="4" size-md="3" v-for="item in 12" :key="item">
-                <ion-skeleton-text animated class="ads-card-cover"></ion-skeleton-text>
+                <ion-skeleton-text animated class="ad-card-cover"></ion-skeleton-text>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -97,7 +97,7 @@
           <ion-grid>
             <ion-row>
               <ion-col size="6" sizeSm="4" size-md="3" v-for="ads in allMyAds" :key="ads.id">
-                <div class="ads-card-cover">
+                <div class="ad-card-cover">
                   <img :src="ads.images[0]" alt="" />
                   <div class="title">{{ ads.title }}</div>
                   <div class="views"><ion-icon :src="getIcon('eyeOutline')"></ion-icon> {{ ads.views }}</div>
@@ -105,7 +105,7 @@
                 </div>
               </ion-col>
               <ion-col size="6" sizeSm="4" size-md="3">
-                <div class="ads-card-cover" @click="$router.push({ name: 'Publish' })">
+                <div class="ad-card-cover" @click="$router.push({ name: 'Publish' })">
                   <div class="plus"><ion-icon :src="getIcon('addOutline')"></ion-icon> Publicar anúncio</div>
                 </div>
               </ion-col>
@@ -480,14 +480,14 @@ export default defineComponent({
     }
   }
 
-  .ads-container {
+  .cards-container {
     margin-top: 48px;
     ion-col {
       padding: 8px;
     }
   }
 
-  .ads-card-cover {
+  .ad-card-cover {
     width: 100%;
     border-radius: 8px;
     overflow: hidden;
