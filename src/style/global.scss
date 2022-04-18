@@ -104,12 +104,14 @@ ion-toggle {
 .only-avatar {
   height: 32px;
   width: 32px;
-  --padding-start: 0;
-  --padding-end: 0;
-  ion-avatar {
+  position: relative;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  img {
     height: 32px;
     width: 32px;
-    --border-radius: 4px;
+    object-fit: cover;
+    border-radius: 4px;
   }
 }
 
@@ -298,5 +300,19 @@ ul.splide__pagination {
     bottom: -1px;
     left: 0;
     width: 100%;
+  }
+}
+
+// map
+@media screen and (min-width: 780px) {
+  .leaflet-control-zoom.leaflet-bar.leaflet-control {
+    margin-top: 54px !important;
+  }
+}
+
+// text
+.text {
+  &--danger {
+    color: var(--ion-color-danger);
   }
 }

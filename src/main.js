@@ -23,7 +23,6 @@ import { IonicVue } from "@ionic/vue";
 import * as IonComponents from "@ionic/vue";
 import * as allIcons from "ionicons/icons";
 
-import MasonryWall from "@yeger/vue-masonry-wall";
 import Maska from "maska";
 import { createMetaManager } from "vue-meta";
 
@@ -57,7 +56,6 @@ const app = createApp(App)
   .use(store)
   .use(Maska)
   .use(createMetaManager())
-  .use(MasonryWall)
   .mixin({
     data() {
       return {

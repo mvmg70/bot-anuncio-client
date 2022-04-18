@@ -64,6 +64,15 @@
                     </ion-row>
                   </ion-grid>
                 </transition>
+                <transition name="expand-y">
+                  <ion-grid class="ion-no-padding" v-if="error.cep">
+                    <ion-row class="ion-no-padding">
+                      <ion-col size="12">
+                        <p class="text--danger">CEP não encontrado! Verifique se o CEP está digitado corretamente e tente novamente.</p>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </transition>
               </div>
             </transition>
             <transition name="slide-x-left">
@@ -192,6 +201,9 @@ export default defineComponent({
       load: {
         cep: false,
       },
+      error: {
+        cep: false,
+      },
       form: {
         cep: "",
         locale: {},
@@ -311,8 +323,15 @@ export default defineComponent({
     async getCep() {
       this.stateLoad("cep", true);
       clearInterval(this.interval);
-      let locale = await getCEP(`cep/${this.form.cep}`);
-      this.form.locale = locale.data;
+      this.error.cep = false;
+      await getCEP(`cep/${this.form.cep}`).then((cep) => {
+        if (cep.status == 200) {
+          this.form.locale = cep.data;
+        } else {
+          this.error.cep = true;
+        }
+      });
+
       this.stateLoad("cep", false);
     },
     async next() {
@@ -329,7 +348,6 @@ export default defineComponent({
         var links = [];
 
         for (let index in images) {
-          images[index].name = "testet";
           await upload(images[index]).then((link) => {
             links.push(link);
           });

@@ -6,7 +6,7 @@
           <ion-back-button default-href="/" color="dark" text=""></ion-back-button>
         </ion-buttons>
 
-        <ion-title slot="center">
+        <ion-title>
           {{ ads ? ads.title : "Carregando ..." }}
         </ion-title>
       </ion-toolbar>
@@ -78,15 +78,18 @@
             <div class="content">
               <div class="card-superior-info">
                 <div class="title">{{ ads.title }}</div>
-                <div class="price" v-if="ads.type != 'donate' || ads.typeAd != 'recommendation' || ads.typeAd != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
+                <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
                 <div class="type" v-else>{{ isTypeTransaction(ads.type) }}</div>
               </div>
 
               <div class="locale">{{ getAdress(ads.locale) }}</div>
+              <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(ads.created_at) }}</div>
 
-              <div class="title-page left-text small">Pagamentos Aceitos:</div>
-              <div class="container-box">
-                <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>
+              <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">
+                <div class="title-page left-text small">Pagamentos Aceitos:</div>
+                <div class="container-box">
+                  <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>
+                </div>
               </div>
 
               <div class="descriprion">
@@ -105,6 +108,8 @@ import { defineComponent } from "vue";
 import { mapActions } from "vuex";
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
+import moment from "moment";
+moment.locale("pt-BR");
 
 export default defineComponent({
   components: { Splide, SplideSlide },
@@ -157,6 +162,9 @@ export default defineComponent({
       this.imageExpand = image;
       this.isExpand = true;
     },
+    dateFormate(date) {
+      return moment(date).format("LLLL");
+    },
   },
 });
 </script>
@@ -170,6 +178,7 @@ export default defineComponent({
     width: 100%;
     height: 100%;
     padding: auto 48px !important;
+    text-align: center;
     &::first-letter {
       text-transform: uppercase;
     }
@@ -268,7 +277,7 @@ export default defineComponent({
       color: var(--ion-color-medium);
       line-height: 100%;
       margin-top: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 4px;
     }
     .descriprion {
       font-size: 1.1em;
