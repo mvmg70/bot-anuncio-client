@@ -145,10 +145,10 @@ export default defineComponent({
     this.isLoading = true;
     let req = await this.getAdsById(this.$route.params.id);
     if (req.status === 404) await this.$router.replace({ name: "NotFound", params: { type: "ads" } });
-    if (req.data.active !== "approved") await this.$router.replace({ name: "NotFound", params: { type: "ads" } });
+    if (req.data && req.data.active !== "approved") await this.$router.replace({ name: "NotFound", params: { type: "ads" } });
 
     this.ads = req.data;
-    if (this.ads.active === "approved") {
+    if (this.ads && this.ads.active === "approved") {
       this.isLoading = false;
       this.moreViews(this.$route.params.id);
     }
@@ -163,6 +163,7 @@ export default defineComponent({
       this.isExpand = true;
     },
     dateFormate(date) {
+      console.log(date);
       return moment(date).format("LLLL");
     },
   },
