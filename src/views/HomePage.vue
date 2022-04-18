@@ -36,11 +36,15 @@
         </div>
 
         <div class="container" v-if="isLoadingAds">
-          <div class="ads-content"><card-ads :isLoad="true" /></div>
+          <div class="cards-content">
+            <div v-for="item in 12" :key="item">
+              <ion-skeleton-text animated style="width: 100%; height: 200px; border-radius: 12px; margin: 6px"></ion-skeleton-text>
+            </div>
+          </div>
         </div>
 
         <div class="container" v-if="allAds">
-          <div class="ads-content" style="display: block !important" v-show="true">
+          <div class="cards-content" style="display: block !important" v-show="true">
             <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
               <ion-img :src="item.images[0]" alt=""></ion-img>
               <ion-card-header>
@@ -75,7 +79,7 @@
           </l-marker>
         </l-map>
 
-        <div class="ads-map-box">
+        <div class="map-box">
           <div v-for="(item, index) in allAds" :key="index">
             <div class="card-ad-content-x" @click="opemAd(item.id)">
               <div class="cover">
@@ -305,7 +309,7 @@ export default defineComponent({
     }
   }
 
-  .ads-content {
+  .cards-content {
     margin-bottom: 48px;
     column-count: 4;
     column-gap: 10px;
@@ -320,7 +324,7 @@ export default defineComponent({
     }
   }
 
-  .ads-map-box {
+  .map-box {
     position: absolute;
     bottom: 24px;
     left: 0;

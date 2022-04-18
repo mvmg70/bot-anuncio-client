@@ -43,7 +43,7 @@
 
 <script>
 export default {
-  name: "CardAds",
+  name: "CardItem",
   adsData: {
     type: Object,
     default: () => {},
