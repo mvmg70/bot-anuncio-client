@@ -71,14 +71,14 @@
           <div class="content">
             <div class="card-superior-info">
               <div class="title">{{ ads.title }}</div>
-              <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
+              <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
               <div class="type" v-else>{{ isTypeTransaction(ads.type) }}</div>
             </div>
 
             <div class="locale">{{ getAdress(ads.locale) }}</div>
             <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(ads.created_at) }}</div>
 
-            <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.typeAd != 'notice'">
+            <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">
               <div class="title-page left-text small">Pagamentos Aceitos:</div>
               <div class="container-box">
                 <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>

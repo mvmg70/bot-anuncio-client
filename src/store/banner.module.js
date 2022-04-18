@@ -10,9 +10,16 @@ export const bannerStore = {
   actions: {
     async getBanners({ commit }) {
       commit("START_LOAD_BANNERS");
-      let filter =
-        "?filter=%7B%0A%20%20%22offset%22%3A%200%2C%0A%20%20%22limit%22%3A%20100%2C%0A%20%20%22skip%22%3A%200%2C%0A%20%20%22order%22%3A%20%22order%22%2C%0A%20%20%22where%22%3A%20%7B%0A%20%20%20%20%22is_active%22%3A%20true%0A%20%20%7D%0A%7D";
-      var banners = await get("/banners" + filter);
+      let filter = {
+        filter: {
+          order: "order",
+          where: {
+            is_active: "true",
+          },
+        },
+      };
+
+      var banners = await get("/banners", filter);
       commit("SET_BANNERS", banners.data);
       commit("FINISH_LOAD_BANNERS");
     },
