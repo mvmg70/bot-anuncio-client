@@ -163,7 +163,6 @@ export default defineComponent({
     },
     centerMap() {
       let center = [this.userLocale.latitude ? this.userLocale.latitude : -23.5564529, this.userLocale.longitude ? this.userLocale.longitude : -46.6618604];
-      console.log(center);
       return center;
     },
   },
