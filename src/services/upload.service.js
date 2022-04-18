@@ -12,10 +12,30 @@ export async function upload(file) {
     webkitRelativePath: file.webkitRelativePath,
   };
 
-  const storageRef = ref(storage, `images/advertisement/${file.name}`);
-  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+  let name = file.name;
 
-  return await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  name = name
+    .replace(/[àáâãäå]/iu, "a")
+    .replace(/[ÀÁÂÃÄÅ]/g, "A")
+    .replace(/[éèêë]/iu, "e")
+    .replace(/[ÈÉÊË]/g, "E")
+    .replace(/[íìîï]/iu, "i")
+    .replace(/[ÍÌÎ]/iu, "I")
+    .replace(/[óòõô]/iu, "o")
+    .replace(/[ÓÒÕÔ]/iu, "O")
+    .replace(/[úùû]/iu, "u")
+    .replace(/[ÚÙÛ]/iu, "U")
+    .replace(/[ç]/iu, "c")
+    .replace(/[Ç]/iu, "C")
+    .replace(/ /g, "-")
+    .replace(/[^a-z0-9./-]/gi, "");
+
+  const storageRef = ref(storage, `images/advertisement/${new Date().getTime()}-${name}`);
+  const uploadTask = await uploadBytesResumable(storageRef, file, metadata);
+
+  console.log(uploadTask);
+
+  return await getDownloadURL(uploadTask.ref).then((downloadURL) => {
     return downloadURL;
   });
 }

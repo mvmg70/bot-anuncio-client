@@ -16,9 +16,7 @@
             <ion-icon :src="getIcon('personCircleOutline')"></ion-icon>
           </ion-button>
           <ion-button v-else color="light-gray" fill="solid" class="only-avatar" router-link="/profile">
-            <ion-avatar>
-              <img :src="currentUser.photoURL" referrerpolicy="no-referrer" alt="" />
-            </ion-avatar>
+            <img :src="currentUser.photoURL" referrerpolicy="no-referrer" alt="" />
           </ion-button>
         </ion-buttons>
       </div>
@@ -43,40 +41,31 @@
           <div class="container">
             <div class="ads-content" v-if="isLoadingAds"><card-ads :isLoad="true" /></div>
             <div class="ads-content" v-else>
-              <card-ads :adsData="allAds[0]" />
-              <masonry-wall :items="allAds" :column-width="300" :gap="16">
-                <template #default="{ item }">
-                  <div @click="opemAd(item.id)">
-                    <ion-card class="card-ad-content">
-                      <ion-img :src="item.images[0]" alt=""></ion-img>
-
-                      <ion-card-header>
-                        <div class="left-side">
-                          <ion-card-title>{{ item.title }}</ion-card-title>
-                          <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
-                        </div>
-                        <div class="price" v-if="item.type != 'donate' || item.typeAd != 'recommendation' || item.typeAd != 'notice'">{{ printMoney(item.price) }}</div>
-                        <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
-                      </ion-card-header>
-
-                      <ion-card-content>
-                        <p>
-                          {{ item.description }}
-                        </p>
-                      </ion-card-content>
-                    </ion-card>
+              <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
+                <ion-img :src="item.images[0]" alt=""></ion-img>
+                <ion-card-header>
+                  <div class="left-side">
+                    <ion-card-title>{{ item.title }}</ion-card-title>
+                    <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
                   </div>
-                </template>
-              </masonry-wall>
+                  <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
+                  <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
+                </ion-card-header>
+                <ion-card-content>
+                  <p>
+                    {{ item.description }}
+                  </p>
+                </ion-card-content>
+              </ion-card>
             </div>
           </div>
         </section>
       </div>
 
-      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-show="mode == 'map'" v-if="userLocale.latitude">
+      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="userLocale.latitude && mode == 'map'">
         <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="[userLocale.latitude, userLocale.longitude]">
           <l-tile-layer :url="url" :attribution="attribution" />
-          <l-control-zoom position="bottomright" />
+          <l-control-zoom position="bottomleft" />
           <l-control-attribution :position="attributionPosition" />
           <l-control-scale :imperial="false" />
           <l-marker :lat-lng="[userLocale.latitude, userLocale.longitude]">
@@ -84,7 +73,6 @@
           </l-marker>
           <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.lat, item.locale.lon]">
             <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinLocation.png" />
-            <l-popup> {{ item.title }} </l-popup>
           </l-marker>
         </l-map>
 
@@ -97,9 +85,9 @@
               <div class="content">
                 <div class="card-superior-info">
                   <div class="title">{{ item.title }}</div>
-                  <div class="price" v-if="item.type != 'donate' || item.typeAd != 'recommendation' || item.typeAd != 'notice'">{{ printMoney(item.price) }}</div>
-                  <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
+                  <div class="type" v-if="item.type == 'donate' && item.type == 'recommendation' && item.type == 'notice'">{{ isTypeTransaction(item.type) }}</div>
                 </div>
+                <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
                 <div class="locale">{{ getAdress(item.locale) }}</div>
                 <div class="descriprion">
                   <p>{{ item.description }}</p>
@@ -127,12 +115,11 @@ import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import Banner from "../components/BannerSlider.vue";
 import Logo from "../components/LogoInline.vue";
 import SearchBar from "../components/SearchBar.vue";
-
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LPopup, LIcon } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 
 export default defineComponent({
-  components: { Logo, Banner, Splide, SplideSlide, SearchBar, LMap, LTileLayer, LMarker, LPopup, LIcon },
+  components: { Logo, Banner, Splide, SplideSlide, SearchBar, LMap, LTileLayer, LMarker, LIcon },
   name: "HomePage",
   data() {
     return {
@@ -160,9 +147,8 @@ export default defineComponent({
     };
   },
   mounted() {
-    let uf = this.userLocale.principalSubdivisionCode;
     this.getBanners();
-    this.getAds(uf);
+    this.getAds();
   },
   computed: {
     ...mapGetters("banner", ["allBanners", "isLoadingBanners"]),
@@ -176,7 +162,12 @@ export default defineComponent({
       return [this.iconWidth / 2, this.iconHeight * 1];
     },
   },
-
+  watch: {
+    userLocale(value) {
+      let uf = value.principalSubdivisionCode;
+      this.getAds(uf);
+    },
+  },
   methods: {
     ...mapActions("banner", ["getBanners"]),
     ...mapActions("ad", ["getAds"]),
@@ -227,10 +218,13 @@ export default defineComponent({
       @media screen and (min-width: 780px) {
         width: calc(100vw - 400px) !important;
         margin-left: 400px;
-        height: 100vh;
-        margin-top: 0;
+        height: 100vh !important;
+        margin-top: 0 !important;
+        .leaflet-control-zoom.leaflet-bar.leaflet-control {
+          margin-top: 60px !important;
+        }
       }
-      height: calc(100vh - 44px);
+      height: calc(100vh - 44px) !important;
       margin-top: 44px;
     }
   }
@@ -308,6 +302,21 @@ export default defineComponent({
     }
   }
 
+  .ads-content {
+    margin-bottom: 48px;
+    column-count: 4;
+    column-gap: 10px;
+    @media screen and (max-width: 1120px) {
+      column-count: 3;
+    }
+    @media screen and (max-width: 920px) {
+      column-count: 2;
+    }
+    @media screen and (max-width: 680px) {
+      column-count: 1;
+    }
+  }
+
   .ads-map-box {
     position: absolute;
     bottom: 24px;
@@ -331,6 +340,7 @@ export default defineComponent({
       align-items: flex-start;
       flex-flow: row-reverse nowrap;
       gap: 12px;
+      width: 350px;
       .cover {
         height: 75px;
         width: 75px;
@@ -360,17 +370,6 @@ export default defineComponent({
             font-weight: 800;
           }
 
-          .price {
-            color: var(--ion-color-primary);
-            font-size: 1.2em;
-            font-family: "Mulish";
-            font-style: normal;
-            font-weight: 700;
-            line-height: 100%;
-            opacity: 0.72;
-            text-align: right;
-          }
-
           .type {
             background: var(--ion-color-secondary-tint);
             padding: 4px 24px 4px 8px;
@@ -385,6 +384,16 @@ export default defineComponent({
             border-radius: 6px;
             margin-right: -24px !important;
           }
+        }
+        .price {
+          color: var(--ion-color-primary);
+          font-size: 1.2em;
+          font-family: "Mulish";
+          font-style: normal;
+          font-weight: 700;
+          line-height: 100%;
+          opacity: 0.72;
+          text-align: left;
         }
         .locale {
           font-family: "Questrial", sans-serif !important;
@@ -419,6 +428,7 @@ export default defineComponent({
     @media screen and (min-width: 780px) {
       background-color: var(--ion-background-color);
       flex-flow: column nowrap;
+      align-items: stretch;
       width: 400px;
       height: calc(100vh - 44px);
       max-height: calc(100vh - 44px);
@@ -437,14 +447,19 @@ export default defineComponent({
 <style lang="scss">
 ion-card.card-ad-content {
   cursor: pointer;
-  margin: 0;
   background: var(--ion-color-light-gray);
   border-radius: 12px;
   box-shadow: none;
+  display: grid;
+  margin: 0;
+  grid-template-rows: auto;
+  margin-bottom: 16px;
+  break-inside: avoid;
   ion-img {
     border-radius: 12px;
     overflow: hidden;
-    max-height: 350px;
+    max-height: 500px;
+    width: 100%;
   }
 
   ion-card-header {
@@ -466,8 +481,8 @@ ion-card.card-ad-content {
       font-size: 1em;
       font-weight: 400;
       text-transform: unset;
-      opacity: 0.8;
-      color: var(--ion-color-medium);
+      opacity: 0.7;
+      color: var(--ion-color-dark);
       line-height: 100%;
     }
 
@@ -503,8 +518,9 @@ ion-card.card-ad-content {
     font-weight: 400;
     font-size: 1.1em;
     line-height: 110%;
-    color: var(--ion-color-medium);
-    opacity: 0.8;
+    padding: 0 12px 12px;
+    color: var(--ion-color-dark);
+    opacity: 0.7;
     p {
       margin: 0;
       overflow: hidden;
