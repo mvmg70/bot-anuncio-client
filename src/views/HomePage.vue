@@ -88,7 +88,7 @@
               <div class="content">
                 <div class="card-superior-info">
                   <div class="title">{{ item.title }}</div>
-                  <div class="type" v-if="item.type == 'donate' && item.type == 'recommendation' && item.type == 'notice'">{{ isTypeTransaction(item.type) }}</div>
+                  <div class="type" v-if="item.type == 'donate' || item.type == 'recommendation' || item.type == 'notice'">{{ isTypeTransaction(item.type) }}</div>
                 </div>
                 <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
                 <div class="locale">{{ getAdress(item.locale) }}</div>
@@ -393,13 +393,14 @@ export default defineComponent({
         }
         .price {
           color: var(--ion-color-primary);
-          font-size: 1.2em;
+          font-size: 1.1em;
           font-family: "Mulish";
           font-style: normal;
           font-weight: 700;
           line-height: 100%;
           opacity: 0.72;
           text-align: left;
+          margin-top: 4px;
         }
         .locale {
           font-family: "Questrial", sans-serif !important;
