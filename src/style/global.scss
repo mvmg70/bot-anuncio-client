@@ -43,6 +43,16 @@ ion-content {
   --padding-start: 16px;
 }
 
+.header-ios ion-toolbar .ios.title-default {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-inline: 48px !important;
+  text-align: center !important;
+}
+
 .line-title {
   display: flex;
   align-items: center;

@@ -13,17 +13,18 @@ export const adStore = {
       let filter = {
         filter: {
           where: {
-            or: [{ typeLocation: "country" }, { typeLocation: "word" }],
+            and: [{ or: [{ typeLocation: "country" }, { typeLocation: "word" }] }, { active: "approved" }],
           },
         },
       };
 
       if (userLocale.latitude) {
         let uf = userLocale.principalSubdivisionCode.split("-")[1];
-        filter.filter.where.or.push({ "locale.uf": uf });
+        filter.filter.where.and[0].or.push({ "locale.uf": uf });
       }
       if (data.search) {
-        filter.filter.where.and = [{ title: { regexp: `^${data.search}/i` } }, { description: { regexp: `^${data.search}/gi` } }];
+        var pattern = `/.*${data.search}.*/i`;
+        filter.filter.where.and.push({ or: [{ title: { regexp: pattern } }, { description: { regexp: pattern } }] });
       }
 
       commit("START_LOAD_ADS");

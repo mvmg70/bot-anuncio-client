@@ -61,8 +61,8 @@ export default {
       display: none;
     }
     img {
-      height: 24px;
-      width: 24px;
+      height: 32px;
+      width: 32px;
     }
   }
 }

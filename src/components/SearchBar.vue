@@ -1,7 +1,7 @@
 <template>
   <div id="SearchBarWithImput" class="container-search-bar" :class="{ 'no-margin': noMargin, 'no-butons': noButtons }">
     <div class="search">
-      <ion-searchbar placeholder="Pesquise por um termo..." v-model="searchValue" @ionInput="updateValue()"></ion-searchbar>
+      <ion-searchbar placeholder="Pesquise por um título ou descrição" v-model="searchValue" @ionInput="updateValue()"></ion-searchbar>
     </div>
     <div class="button-filters">
       <ion-button color="primary" size="small" shape="round"> {{ userLocale ? userLocale.city : "-" }} </ion-button>
@@ -42,15 +42,15 @@ export default {
   watch: {
     searchValue(newValue) {
       clearInterval(this.interval);
-      if (newValue.length < 3) {
+      if (newValue.length == 0) {
         this.interval = setInterval(() => {
           this.search("");
         }, 500);
-        return;
+      } else if (newValue.length >= 3) {
+        this.interval = setInterval(() => {
+          this.search(newValue);
+        }, 500);
       }
-      this.interval = setInterval(() => {
-        this.search(newValue);
-      }, 500);
     },
   },
   computed: {

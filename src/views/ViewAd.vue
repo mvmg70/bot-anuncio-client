@@ -116,7 +116,7 @@ export default defineComponent({
         arrows: false,
         pagination: true,
         focus: "center",
-        trimSpace: false,
+        trimSpace: true,
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
         breakpoints: {
           780: {
@@ -136,14 +136,14 @@ export default defineComponent({
   async mounted() {
     this.isLoading = true;
     let req = await this.getAdsById(this.$route.params.id);
-    if (req.status === 404) await this.$router.replace({ name: "NotFound", params: { type: "ads" } });
-    if (req.data && req.data.active !== "approved") await this.$router.replace({ name: "NotFound", params: { type: "ads" } });
+    if (req.status === 404 || (req.data && req.data.active !== "approved")) {
+      this.$router.replace({ name: "NotFound", params: { type: "ads" } });
+      return;
+    }
 
     this.ads = req.data;
-    if (this.ads && this.ads.active === "approved") {
-      this.isLoading = false;
-      this.moreViews(this.$route.params.id);
-    }
+    this.moreViews(this.$route.params.id);
+    this.isLoading = false;
   },
   methods: {
     ...mapActions("ad", ["getAdsById", "moreViews"]),
@@ -164,19 +164,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 #ViewAdPage {
-  ion-title.ios.title-default {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: auto 48px !important;
-    text-align: center;
-    &::first-letter {
-      text-transform: uppercase;
-    }
-  }
-
   .header-banner {
     border-radius: 12px;
     width: 100%;

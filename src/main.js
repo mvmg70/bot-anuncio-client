@@ -168,8 +168,6 @@ const app = createApp(App)
     },
   });
 
-app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith("L");
-
 Object.keys(IonComponents).forEach((key) => {
   if (/^Ion[A-Z]\w+$/.test(key)) {
     app.component(key, IonComponents[key]);
