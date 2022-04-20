@@ -1,17 +1,12 @@
 <template>
   <ion-page id="HomePage">
-    <ion-content :fullscreen="true" :class="{ 'page-map-mode': mode == 'map' }">
+    <ion-content :fullscreen="true">
       <div class="flex-tooblar">
         <Logo :iconOnly="isMobile" />
 
-        <SearchBar :noMargin="mode == 'map'" :noButtons="isMobile" />
+        <SearchBar :noButtons="isMobile" />
 
         <ion-buttons>
-          <ion-button color="light-gray" fill="solid" :class="{ 'only-icon': isMobile }" @click="changeMode()">
-            <span v-if="!isMobile"> Alterar visualização </span>
-            <ion-icon v-if="isMobile && mode == 'normal'" :src="getIcon('earthOutline')"></ion-icon>
-            <ion-icon v-if="isMobile && mode == 'map'" :src="getIcon('gridOutline')"></ion-icon>
-          </ion-button>
           <ion-button v-if="!currentUser" color="light-gray" fill="solid" class="only-icon" router-link="/auth">
             <ion-icon :src="getIcon('personCircleOutline')"></ion-icon>
           </ion-button>
@@ -21,7 +16,7 @@
         </ion-buttons>
       </div>
 
-      <section v-if="mode == 'normal'">
+      <section>
         <div class="container">
           <div class="header-banner">
             <Splide :options="bannersOptions">
@@ -44,60 +39,31 @@
         </div>
 
         <div class="container" v-if="allAds">
-          <div class="cards-content" style="display: block !important" v-show="true">
+          <div class="cards-content">
             <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
-              <ion-img :src="item.images[0]" alt=""></ion-img>
+              <div class="cover">
+                <ion-img :src="item.images[0]" alt=""></ion-img>
+                <div class="type" v-if="item.type === 'donate' || item.type === 'recommendation' || item.type === 'notice'">{{ isTypeTransaction(item.type) }}</div>
+              </div>
               <ion-card-header>
                 <div class="left-side">
                   <ion-card-title>{{ item.title }}</ion-card-title>
                   <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
                 </div>
-                <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
-                <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
+                <div class="price" v-if="item.type !== 'donate' && item.type !== 'recommendation' && item.type !== 'notice'">{{ printMoney(item.price) }}</div>
               </ion-card-header>
               <ion-card-content>
-                <p>
-                  {{ item.description }}
-                </p>
+                <ion-text>
+                  <p>{{ item.description }}</p>
+                </ion-text>
               </ion-card-content>
             </ion-card>
           </div>
         </div>
-      </section>
 
-      <section class="map-mode" :class="{ visibled: mode == 'map' }" v-if="mode == 'map'">
-        <l-map :zoom="zoom" :max-zoom="maxZoom" :min-zoom="minZoom" :center="centerMap">
-          <l-tile-layer :url="url" :attribution="attribution" />
-          <l-control-zoom position="bottomleft" />
-          <l-control-attribution :position="attributionPosition" />
-          <l-control-scale :imperial="false" />
-          <l-marker :lat-lng="centerMap">
-            <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinPerson.png" />
-          </l-marker>
-          <l-marker v-for="(item, index) in allAds" :key="index" :lat-lng="[item.locale.latitude, item.locale.longitude]">
-            <l-icon :icon-size="dynamicSize" :icon-anchor="dynamicAnchor" icon-url="/assets/images/pinLocation.png" />
-          </l-marker>
-        </l-map>
-
-        <div class="map-box">
-          <div v-for="(item, index) in allAds" :key="index">
-            <div class="card-ad-content-x" @click="opemAd(item.id)">
-              <div class="cover">
-                <img :src="item.images[0]" alt="" />
-              </div>
-              <div class="content">
-                <div class="card-superior-info">
-                  <div class="title">{{ item.title }}</div>
-                  <div class="type" v-if="item.type == 'donate' || item.type == 'recommendation' || item.type == 'notice'">{{ isTypeTransaction(item.type) }}</div>
-                </div>
-                <div class="price" v-if="item.type != 'donate' && item.type != 'recommendation' && item.type != 'notice'">{{ printMoney(item.price) }}</div>
-                <div class="locale">{{ getAdress(item.locale) }}</div>
-                <div class="descriprion">
-                  <p>{{ item.description }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="container no-ad" v-if="allAds.length == 0">
+          <h1>Sem anúncio</h1>
+          <p>Infelizmente não encontramos nenhum anúncio!</p>
         </div>
       </section>
 
@@ -118,23 +84,12 @@ import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import Banner from "../components/BannerSlider.vue";
 import Logo from "../components/LogoInline.vue";
 import SearchBar from "../components/SearchBar.vue";
-import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LIcon } from "@vue-leaflet/vue-leaflet";
 
 export default defineComponent({
-  components: { Logo, Banner, Splide, SplideSlide, SearchBar, LMap, LTileLayer, LMarker, LIcon },
+  components: { Logo, Banner, Splide, SplideSlide, SearchBar },
   name: "HomePage",
   data() {
     return {
-      zoom: 16,
-      minZoom: 3,
-      maxZoom: 19,
-      iconWidth: 32,
-      iconHeight: 32,
-      zoomPosition: "bottomLeft",
-      attributionPosition: "bottomright",
-      attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       bannersOptions: {
         speed: 400,
         width: "100%",
@@ -146,7 +101,6 @@ export default defineComponent({
         perMove: 1,
         focus: "center",
       },
-      mode: "normal",
     };
   },
   mounted() {
@@ -164,10 +118,6 @@ export default defineComponent({
     dynamicAnchor() {
       return [this.iconWidth / 2, this.iconHeight * 1];
     },
-    centerMap() {
-      let center = [this.userLocale.latitude ? this.userLocale.latitude : -23.5564529, this.userLocale.longitude ? this.userLocale.longitude : -46.6618604];
-      return center;
-    },
   },
   watch: {
     userLocale() {
@@ -177,17 +127,11 @@ export default defineComponent({
   methods: {
     ...mapActions("banner", ["getBanners"]),
     ...mapActions("ad", ["getAds"]),
-    log($e) {
-      return $e;
-    },
     opemAd(id) {
       this.$router.push({
         name: "ViewAd",
         params: { id: id },
       });
-    },
-    changeMode() {
-      this.mode = this.mode == "normal" ? "map" : "normal";
     },
     getAdress(locale) {
       return `${locale.logradouro}, ${locale.bairro} - ${locale.localidade}`;
@@ -207,31 +151,6 @@ export default defineComponent({
     .splide__track {
       border-radius: 12px;
       overflow: hidden;
-    }
-  }
-
-  .map-mode {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .leaflet-container {
-      @media screen and (min-width: 780px) {
-        width: calc(100vw - 400px) !important;
-        margin-left: 400px;
-        height: 100vh !important;
-        margin-top: 0 !important;
-        .leaflet-control-zoom.leaflet-bar.leaflet-control {
-          margin-top: 60px !important;
-        }
-      }
-      height: calc(100vh - 44px) !important;
-      margin-top: 44px;
     }
   }
 
@@ -258,7 +177,7 @@ export default defineComponent({
       padding-left: 16px;
       justify-self: start;
       grid-area: logo;
-      min-width: 40px;
+      min-width: 48px;
       img {
         width: 24px;
         height: 24px;
@@ -276,34 +195,10 @@ export default defineComponent({
       justify-self: end;
       grid-area: button;
       gap: 8px;
-      min-width: 88px;
+      min-width: 48px;
       ion-button {
         margin: 0 !important;
         --border-radius: 8px;
-      }
-    }
-  }
-
-  .page-map-mode {
-    .flex-tooblar {
-      width: 100%;
-      background: transparent;
-      grid-template-columns: 400px 2fr 1fr;
-      grid-template-areas: "search logo button";
-      .container-search-bar {
-        flex-grow: 1;
-        background: var(--ion-toolbar-background);
-        padding: auto 16px;
-        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-      }
-      @media screen and (max-width: 780px) {
-        background: var(--ion-toolbar-background);
-        grid-template-areas: "logo search button";
-        grid-template-columns: auto 1fr auto;
-        .container-search-bar {
-          box-shadow: none;
-          padding: 0;
-        }
       }
     }
   }
@@ -323,129 +218,17 @@ export default defineComponent({
     }
   }
 
-  .map-box {
-    position: absolute;
-    bottom: 24px;
-    left: 0;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: none;
-    z-index: 9999;
-    padding: 16px 16px 0;
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: flex-end;
-    overflow: auto;
-    gap: 16px;
-    .card-ad-content-x {
-      background: var(--ion-color-light-gray);
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      align-items: flex-start;
-      flex-flow: row-reverse nowrap;
-      gap: 12px;
-      width: 350px;
-      .cover {
-        height: 75px;
-        width: 75px;
-        min-width: 83px;
-        border-radius: 8px;
-        overflow: hidden;
-        z-index: 10;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-
-      .content {
-        z-index: 9;
-        flex-grow: 1;
-        .card-superior-info {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 8px;
-          .title {
-            font-family: "Mulish", sans-serif;
-            font-size: 1.15em;
-            line-height: 100%;
-            font-weight: 800;
-          }
-
-          .type {
-            background: var(--ion-color-secondary-tint);
-            padding: 4px 24px 4px 8px;
-            text-transform: capitalize;
-            color: var(--ion-color-secondary-contrast);
-            font-size: 1.1em;
-            font-family: "Mulish" !important;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 100%;
-            text-align: right;
-            border-radius: 6px;
-            margin-right: -24px !important;
-          }
-        }
-        .price {
-          color: var(--ion-color-primary);
-          font-size: 1.1em;
-          font-family: "Mulish";
-          font-style: normal;
-          font-weight: 700;
-          line-height: 100%;
-          opacity: 0.72;
-          text-align: left;
-          margin-top: 4px;
-        }
-        .locale {
-          font-family: "Questrial", sans-serif !important;
-          font-size: 0.8em;
-          font-weight: 400;
-          text-transform: unset;
-          opacity: 0.8;
-          color: var(--ion-color-medium);
-          line-height: 100%;
-          margin-top: 8px;
-        }
-        .descriprion {
-          font-style: normal;
-          font-weight: 400;
-          font-size: 0.9em;
-          line-height: 110%;
-          color: var(--ion-color-medium);
-          opacity: 0.8;
-          margin-top: 12px;
-          p {
-            margin: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* number of lines to show */
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-          }
-        }
-      }
+  .no-ad {
+    text-align: center;
+    padding: 48px auto;
+    h1 {
+      color: var(--ion-color-primary);
+      font-weight: 700;
+      font-size: 2.5em;
     }
-    @media screen and (min-width: 780px) {
-      background-color: var(--ion-background-color);
-      flex-flow: column nowrap;
-      align-items: stretch;
-      width: 400px;
-      height: calc(100vh - 44px);
-      max-height: calc(100vh - 44px);
-      bottom: 0;
-      .cover {
-        height: 100px;
-        width: 100px;
-        min-width: 112px;
-        border-radius: 12px;
-      }
+    p {
+      font-size: 1em;
+      opacity: 0.8;
     }
   }
 }
@@ -462,22 +245,43 @@ ion-card.card-ad-content {
   grid-template-rows: auto;
   margin-bottom: 16px;
   break-inside: avoid;
-  ion-img {
-    border-radius: 12px;
-    overflow: hidden;
-    max-height: 500px;
-    width: 100%;
+  .cover {
+    position: relative;
+    ion-img {
+      border-radius: 8px;
+      overflow: hidden;
+      max-height: 500px;
+      width: 100%;
+      min-height: 75px;
+      background-color: rgba(var(--ion-color-dark-rgb), 0.2);
+      background-image: url("https://botanuncio.com.br/assets/logo/android-chrome-72x72.png");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .type {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      padding: 4px 8px;
+      text-transform: capitalize;
+      background: var(--ion-color-secondary-tint);
+      color: var(--ion-color-secondary-contrast);
+      line-height: 90%;
+      font-size: 0.95em;
+      font-family: "Mulish" !important;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 100%;
+      text-align: left;
+      border-radius: 0 6px 6px 0;
+    }
   }
 
   ion-card-header {
-    padding: 12px;
+    padding: 8px 8px 12px;
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    flex-flow: column nowrap;
     gap: 8px;
-    .left-side {
-      flex-grow: 1;
-    }
     ion-card-title {
       font-family: "Mulish", sans-serif;
       font-size: 1.5em;
@@ -488,52 +292,39 @@ ion-card.card-ad-content {
       font-size: 1em;
       font-weight: 400;
       text-transform: unset;
-      opacity: 0.7;
+      opacity: 0.8;
       color: var(--ion-color-dark);
       line-height: 100%;
+      margin-top: 6px;
     }
 
     .price {
       color: var(--ion-color-primary);
-      font-size: 1.2em;
+      font-size: 1.5em;
       font-family: "Mulish";
       font-style: normal;
       font-weight: 700;
       line-height: 100%;
-      opacity: 0.72;
-      text-align: right;
-    }
-
-    .type {
-      background: var(--ion-color-secondary-tint);
-      padding: 4px 24px 4px 8px;
-      text-transform: capitalize;
-      color: var(--ion-color-secondary-contrast);
-      font-size: 1.1em;
-      font-family: "Mulish" !important;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 100%;
-      text-align: right;
-      border-radius: 6px;
-      margin-right: -24px !important;
+      opacity: 0.85;
+      text-align: left;
     }
   }
 
   ion-card-content {
+    font-family: "Questrial", sans-serif !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 1.1em;
-    line-height: 110%;
-    padding: 0 12px 12px;
+    padding: 0 8px 12px;
     color: var(--ion-color-dark);
-    opacity: 0.7;
     p {
+      opacity: 0.8;
+      line-height: 110%;
+      font-size: 1em;
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2; /* number of lines to show */
+      -webkit-line-clamp: 3; /* number of lines to show */
       line-clamp: 2;
       -webkit-box-orient: vertical;
     }

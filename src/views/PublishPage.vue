@@ -2,11 +2,10 @@
   <ion-page id="PublishPage">
     <ion-header>
       <ion-toolbar v-if="formView !== 8">
-        <div class="container">
-          <ion-buttons slot="start">
-            <ion-button size="small" color="danger" router-link="/" router-direction="back"> cancelar </ion-button>
-          </ion-buttons>
-        </div>
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/" color="dark" text="" size="small"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Publicar Anúncio</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -406,14 +405,14 @@ export default defineComponent({
   computed: {
     ...mapGetters("user", ["currentUser"]),
     isNextDisabled() {
-      if (this.formView == 1 && this.form.locale.localidade) return false;
+      if (this.formView == 2 && this.form.locale.localidade) return false;
       if (this.formView == 2 && this.form.title) return false;
       if (this.formView == 3 && this.form.description) return false;
       if (this.formView == 4 && this.form.images.length >= 1) return false;
       if (this.formView == 5 && this.form.type) return false;
       if (this.formView == 6 && this.form.price && this.form.paymentAccepted.length >= 1) return false;
       if (this.formView == 7 && this.form.typeLocation) return false;
-      return true;
+      return false;
     },
     getAdress() {
       return `${this.form.locale.logradouro}, ${this.form.locale.bairro}`;
@@ -437,7 +436,8 @@ export default defineComponent({
   }
 
   .container-form {
-    max-width: 400px;
+    width: 400px;
+    max-width: 100%;
     height: 100%;
     overflow-y: visible;
     overflow-x: hidden;
