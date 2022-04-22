@@ -26,7 +26,7 @@
                 <ion-item class="custon-input" mode="md" lines="none">
                   <ion-label>Qual CEP do seu anúncio?</ion-label>
                   <div class="input-container">
-                    <ion-input placeholder="00000-000" autocomplete="postal-code" type="text" v-model="form.cep" clear-input v-maska="'#####-###'"></ion-input>
+                    <ion-input placeholder="00000-000" autocomplete="postal-code" type="text" v-model="form.cep" clear-input></ion-input>
                     <ion-progress-bar type="indeterminate" v-if="load.cep"></ion-progress-bar>
                   </div>
                   <div class="botton-slot">
@@ -111,20 +111,34 @@
             </transition>
             <transition name="slide-x-left">
               <div class="form-5" v-if="formView == 5">
-                <ion-label class="large">Qual tipo do seu anúncio?</ion-label>
+                <ion-label class="large">O que você pretende com esse anúncio?</ion-label>
                 <ion-grid>
                   <ion-row>
                     <ion-col size="6" v-for="(item, index) in typeValues" :key="index">
-                      <div class="button-select" :class="{ selected: form.type === item.value }" @click="form.type = item.value">{{ item.title }}</div>
+                      <div class="button-select" :class="{ selected: form.type === item.value }" @click="form.type = item.value">{{ item.labelPublish }}</div>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
+                <transition name="expand-y">
+                  <ion-item class="custon-input check no-ripple" mode="md" lines="none" v-if="form.type == 'rent'">
+                    <ion-checkbox mode="md" v-model="form.wantRent"> </ion-checkbox>
+                    <ion-label> Estou buscando um aluguel </ion-label>
+                  </ion-item>
+                </transition>
+                <transition name="expand-y">
+                  <ion-item class="custon-input check no-ripple" mode="md" lines="none" v-if="form.type == 'sell'">
+                    <ion-checkbox mode="md" v-model="form.priceVariable"> </ion-checkbox>
+                    <ion-label> Esse anúncio tem vários valores. </ion-label>
+                  </ion-item>
+                </transition>
               </div>
             </transition>
             <transition name="slide-x-left">
               <div class="form-6" v-if="formView == 6">
                 <ion-item class="custon-input" mode="md" lines="none">
                   <ion-label>Qual o valor?</ion-label>
+                  <p class="obs" v-if="form.priceVariable">Como seu anúncio tem vários valores, informe apenas o menor.</p>
+
                   <div class="input-container">
                     <ion-input placeholder="R$ 99,99" type="text" v-model="form.price"></ion-input>
                   </div>
@@ -136,7 +150,10 @@
                     <ion-grid>
                       <ion-row>
                         <ion-col size="6" v-for="(item, index) in paymentsValues" :key="index">
-                          <div class="button-select" :class="{ selected: paymentSelected(item.value) }" @click="toglePayment(item.value)">{{ item.title }}</div>
+                          <div class="button-select" :class="{ selected: paymentSelected(item.value) }" @click="toglePayment(item.value)">
+                            <img :src="item.image" alt="" />
+                            {{ item.label }}
+                          </div>
                         </ion-col>
                       </ion-row>
                     </ion-grid>
@@ -192,9 +209,11 @@ import { mapActions, mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { getCEP } from "@/services/api.service";
 import { upload } from "../services/upload.service";
+import { mask } from "vue-the-mask";
 
 export default defineComponent({
   name: "PublishPage",
+  directives: { mask },
   data() {
     return {
       load: {
@@ -210,70 +229,14 @@ export default defineComponent({
         description: null,
         images: [],
         type: null,
-        price: 0,
+        price: 10,
         paymentAccepted: [],
         typeLocation: null,
+        wantRent: false,
+        priceVariable: false,
       },
-      typeValues: [
-        {
-          value: "buy",
-          title: "Compra",
-        },
-        {
-          value: "sell",
-          title: "Venda",
-        },
-        {
-          value: "rent",
-          title: "Aluguel",
-        },
-        {
-          value: "change",
-          title: "Troca",
-        },
-        {
-          value: "donate",
-          title: "Doação",
-        },
-        {
-          value: "recommendation",
-          title: "Indicação",
-        },
-        {
-          value: "request",
-          title: "Pedido",
-        },
-        {
-          value: "notice",
-          title: "Aviso",
-        },
-      ],
-      paymentsValues: [
-        {
-          value: "pix",
-          title: "Pix",
-        },
-        {
-          value: "money",
-          title: "Dinheiro",
-        },
-        {
-          value: "card",
-          title: "Crédito ou Débito",
-        },
-        {
-          value: "bitcoin",
-          title: "Bitcoin",
-        },
-        {
-          value: "etherium",
-          title: "Etherium",
-        },
-        {
-          value: "others",
-          title: "Outros",
-        },
-      ],
+      typeValues: [],
+      paymentsValues: [],
       typeLocationValues: [
         {
           value: "proximity",
@@ -301,6 +264,10 @@ export default defineComponent({
       timeBound: 500,
       imagesFile: [],
     };
+  },
+  mounted() {
+    this.paymentsValues = this.isPaymentAccepted("allArray");
+    this.typeValues = this.isTypeTransaction("allArray");
   },
   watch: {
     "form.cep"(newValue) {
@@ -405,14 +372,14 @@ export default defineComponent({
   computed: {
     ...mapGetters("user", ["currentUser"]),
     isNextDisabled() {
-      if (this.formView == 2 && this.form.locale.localidade) return false;
+      if (this.formView == 1 && this.form.locale.localidade) return false;
       if (this.formView == 2 && this.form.title) return false;
       if (this.formView == 3 && this.form.description) return false;
       if (this.formView == 4 && this.form.images.length >= 1) return false;
       if (this.formView == 5 && this.form.type) return false;
       if (this.formView == 6 && this.form.price && this.form.paymentAccepted.length >= 1) return false;
       if (this.formView == 7 && this.form.typeLocation) return false;
-      return false;
+      return true;
     },
     getAdress() {
       return `${this.form.locale.logradouro}, ${this.form.locale.bairro}`;
@@ -569,8 +536,12 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     opacity: 0.5;
     transition: all 0.35s;
+    img {
+      height: 20px;
+    }
     &.selected {
       border-color: var(--ion-color-primary-tint);
       background-color: rgba(var(--ion-color-primary-rgb), 0.05);
@@ -648,5 +619,11 @@ export default defineComponent({
       max-width: 350px;
     }
   }
+}
+.obs {
+  margin: 0;
+  font-size: 0.85em;
+  opacity: 0.8;
+  margin-bottom: 8px;
 }
 </style>

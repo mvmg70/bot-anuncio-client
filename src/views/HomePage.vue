@@ -43,14 +43,18 @@
             <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
               <div class="cover">
                 <ion-img :src="item.images[0]" alt=""></ion-img>
-                <div class="type" v-if="item.type === 'donate' || item.type === 'recommendation' || item.type === 'notice'">{{ isTypeTransaction(item.type) }}</div>
+                <div class="type" :style="`color: ${isTypeTransaction(item.type).color}; background-color: ${isTypeTransaction(item.type).bg}`">
+                  {{ isTypeTransaction(item.type).labelView }}
+                </div>
               </div>
               <ion-card-header>
                 <div class="left-side">
                   <ion-card-title>{{ item.title }}</ion-card-title>
                   <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
                 </div>
-                <div class="price" v-if="item.type !== 'donate' && item.type !== 'recommendation' && item.type !== 'notice'">{{ printMoney(item.price) }}</div>
+                <div class="price" v-if="item.type !== 'donate' && item.type !== 'recommendation' && item.type !== 'notice'">
+                  {{ printMoney(item.price) }}
+                </div>
               </ion-card-header>
               <ion-card-content>
                 <ion-text>

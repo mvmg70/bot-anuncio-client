@@ -1,0 +1,193 @@
+{
+    "typeTransaction": [{
+            "value": "buy",
+            "labelPublish": "Comprar",
+            "labelView": "Compro",
+            "color": "",
+            "bg": "",
+            "onPublish": true
+        },
+        {
+            "value": "sell",
+            "labelPublish": "Vender",
+            "labelView": "Vendo",
+            "color": "",
+            "bg": "#A6FFC6",
+            "onPublish": true
+        },
+        {
+            "value": "rent",
+            "labelPublish": "Aluguar",
+            "labelView": "Alugo",
+            "color": "#4B4B4B",
+            "bg": "#82CDFF",
+            "onPublish": true
+        },
+        {
+            "value": "rentWant",
+            "labelPublish": "Aluguar",
+            "labelView": "Busco para alugar",
+            "color": "#4B4B4B",
+            "bg": "#77DCF2",
+            "onPublish": false
+        },
+        {
+            "value": "change",
+            "labelPublish": "Trocar",
+            "labelView": "Troco",
+            "color": "",
+            "bg": "",
+            "onPublish": true
+        },
+        {
+            "value": "donate",
+            "labelPublish": "Doar",
+            "labelView": "Doo",
+            "color": "#FFFFFF",
+            "bg": "#4B75F2",
+            "onPublish": true
+        },
+        {
+            "value": "recommendation",
+            "labelPublish": "Indicar",
+            "labelView": "Indico",
+            "color": "",
+            "bg": "",
+            "onPublish": true
+        },
+        {
+            "value": "request",
+            "labelPublish": "Pedir",
+            "labelView": "Peço",
+            "color": "",
+            "bg": "#F2A516",
+            "onPublish": true
+        },
+        {
+            "value": "notice",
+            "labelPublish": "Avisar",
+            "labelView": "Aviso",
+            "color": "",
+            "bg": "#F2A516",
+            "onPublish": true
+        },
+        {
+            "value": "offer",
+            "labelPublish": "Oferecer",
+            "labelView": "Ofereço",
+            "color": "",
+            "bg": "#F2A516",
+            "onPublish": true
+        }
+    ],
+    "paymentsAccepted": [{
+            "value": "pix",
+            "label": "Pix",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/pix.png",
+            "onPublish": true
+        },
+        {
+            "value": "money",
+            "label": "Dinheiro",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/money.png",
+            "onPublish": true
+        },
+        {
+            "value": "card",
+            "label": "Crédito/Débito",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/card.png",
+            "onPublish": true
+        },
+        {
+            "value": "bitcoin",
+            "label": "Bitcoin",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/bitcoin.png",
+            "onPublish": true
+        },
+        {
+            "value": "ethereum",
+            "label": "Ethereum",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/ethereum.png",
+            "onPublish": true
+        },
+        {
+            "value": "picpay",
+            "label": "PicPay",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/picpay.png",
+            "onPublish": true
+        },
+        {
+            "value": "nano",
+            "label": "NANO",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/nano.png",
+            "onPublish": true
+        },
+        {
+            "value": "paypal",
+            "label": "PayPal",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/paypal.png",
+            "onPublish": true
+        },
+        {
+            "value": "mercadoPago",
+            "label": "Mercado Pago",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/mercadoPago.png",
+            "onPublish": true
+        },
+        {
+            "value": "pagseguro",
+            "label": "PagSeguro",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/pagseguro.png",
+            "onPublish": true
+        },
+        {
+            "value": "others",
+            "label": "Outros",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/others.png",
+            "onPublish": false
+        }
+    ],
+    "typeLocationValues": [{
+            "value": "proximity",
+            "labelPublish": "Bairros próximos"
+        },
+        {
+            "value": "county",
+            "labelPublish": "Meu município"
+        },
+        {
+            "value": "state",
+            "labelPublish": "Meu estado"
+        },
+        {
+            "value": "country",
+            "labelPublish": "Todo Brasil"
+        },
+        {
+            "value": "word",
+            "labelPublish": "Internacional"
+        }
+    ]
+}
