@@ -8,13 +8,11 @@
 
         <ion-title> Perfil </ion-title>
 
-        <!--
         <ion-buttons slot="end">
           <ion-button color="light-gray" fill="none" class="only-icon" @click="socialShareOpem = true">
             <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
           </ion-button>
         </ion-buttons>
-        -->
       </ion-toolbar>
     </ion-header>
 
@@ -23,7 +21,6 @@
         <div class="container">
           <div class="buttons">
             <ion-button size="small" @click="opemCompleteProfile()" v-if="!currentUser.completed"> Complete seu perfil </ion-button>
-            <ion-button size="small" @click="editOpem = !editOpem" v-if="false"> Editar Perfil </ion-button>
           </div>
         </div>
       </div>
@@ -97,7 +94,7 @@
           <ion-grid>
             <ion-row>
               <ion-col size="6" sizeSm="4" size-md="3" v-for="ads in allMyAds" :key="ads.id">
-                <div class="ad-card-cover">
+                <div class="ad-card-cover" @click="opemViewAd(ads)">
                   <img :src="ads.images[0]" alt="" />
                   <div class="title">{{ ads.title }}</div>
                   <div class="views"><ion-icon :src="getIcon('eyeOutline')"></ion-icon> {{ ads.views }}</div>
@@ -120,8 +117,65 @@
       </ion-modal>
 
       <!-- Edit Modal -->
-      <ion-modal :is-open="editOpem" @didDismiss="editOpem = false">
-        <ion-content>Modal Edit</ion-content>
+      <ion-modal :is-open="viewOpem" @didDismiss="viewOpem = false" class="viewAD">
+        <ion-content>
+          <div class="content-modal">
+            <section class="title-modal">
+              <div class="title">{{ viewAd.title }}</div>
+              <ion-button color="danger" fill="solid" class="only-icon" @click="viewOpem = false">
+                <ion-icon :src="getIcon('addOutline')"></ion-icon>
+              </ion-button>
+            </section>
+            <section v-if="viewAd" class="body-modal">
+              <div class="header-banner">
+                <Splide :options="imagesOptions">
+                  <SplideSlide v-for="(image, index) in viewAd.images" :key="index">
+                    <img :src="image" @click="expandImage(image)" alt="" />
+                  </SplideSlide>
+                </Splide>
+              </div>
+
+              <div class="container">
+                <div class="content">
+                  <div class="card-superior-info">
+                    <div class="title">{{ viewAd.title }}</div>
+                    <div class="price" v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">{{ printMoney(viewAd.price, viewAd.type) }}</div>
+                    <div class="type" v-else>{{ isTypeTransaction(viewAd.type) }}</div>
+                  </div>
+
+                  <div class="locale">{{ getAdress(viewAd.locale) }}</div>
+                  <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(viewAd.created_at) }}</div>
+
+                  <div v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">
+                    <div class="title-page left-text small">Pagamentos Aceitos:</div>
+                    <div class="container-box">
+                      <div
+                        class="box"
+                        v-for="(item, index) in viewAd.paymentAccepted"
+                        :key="index"
+                        :style="`color: ${isPaymentAccepted(item).color}; background: ${isPaymentAccepted(item).background}`"
+                      >
+                        <img :src="isPaymentAccepted(item).image" alt="" />
+                        {{ isPaymentAccepted(item).label }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="descriprion">
+                    <p>{{ viewAd.description }}</p>
+                  </div>
+
+                  <div class="divider"></div>
+
+                  <div class="mb-4 title-page left-text small">Visto pela ultima vez: {{ dateFormate(viewAd.updated_at) }}</div>
+                </div>
+              </div>
+            </section>
+            <section class="footer-modal">
+              <ion-button color="danger" size="small" @click="deleteAd(viewAd.id)"> Deletar </ion-button>
+            </section>
+          </div>
+        </ion-content>
       </ion-modal>
 
       <!-- Complete Modal -->
@@ -187,25 +241,49 @@
 </template>
 
 <script>
-import { loadingController } from "@ionic/vue";
+import { loadingController, toastController } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
+
+import { Splide, SplideSlide } from "@splidejs/vue-splide";
+import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import moment from "moment";
 import md5 from "md5";
 
 export default defineComponent({
   name: "ProfilePage",
+  components: { Splide, SplideSlide },
   data() {
     return {
       socialShareOpem: false,
-      editOpem: false,
+      viewOpem: false,
       completeOpem: false,
       completeStep: 2,
+      viewAd: {},
       user: {
         phone: "",
         has_whatsapp: false,
         has_telegram: false,
         bithday: "",
+      },
+      imagesOptions: {
+        speed: 400,
+        height: "350px",
+        autoWidth: true,
+        gap: 24,
+        arrows: false,
+        pagination: true,
+        focus: "center",
+        trimSpace: true,
+        easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+        breakpoints: {
+          780: {
+            height: "200px",
+          },
+          1024: {
+            height: "250px",
+          },
+        },
       },
     };
   },
@@ -214,6 +292,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions("user", ["getMyAds", "update"]),
+    ...mapActions("ad", ["deleteAds"]),
     getImageLink() {
       if (this.currentUser.photoURL) return this.currentUser.photoURL;
 
@@ -250,6 +329,10 @@ export default defineComponent({
       if (!this.currentUser.bithday) this.completeStep = 2;
       if (!this.currentUser.phone) this.completeStep = 1;
       this.completeOpem = true;
+    },
+    opemViewAd(ad) {
+      this.viewAd = ad;
+      this.viewOpem = true;
     },
     async nextStep() {
       const loading = await loadingController.create({
@@ -317,6 +400,36 @@ export default defineComponent({
             });
         }
       }
+    },
+    getAdress(locale) {
+      return `${locale.logradouro}, ${locale.bairro} - ${locale.localidade}`;
+    },
+    dateFormate(date) {
+      return moment(date).format("LLLL");
+    },
+    async deleteAd(id) {
+      const loading = await loadingController.create({
+        cssClass: "load-custom",
+        spinner: "circular",
+      });
+      await loading.present();
+      await this.deleteAds(id)
+        .then(() => {
+          this.getMyAds();
+          this.viewOpem = false;
+          this.openToast("Anúncio deletado com sucesso!");
+          loading.dismiss();
+        })
+        .catch(() => {
+          this.openToast("Não foi possível deletar o anúncio, tente novamante mais tarde.");
+        });
+    },
+    async openToast(message) {
+      const toast = await toastController.create({
+        message: message,
+        duration: 2500,
+      });
+      return toast.present();
     },
   },
   computed: {
@@ -606,6 +719,109 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+}
+
+.viewAD {
+  .content-modal {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-flow: column nowrap;
+    height: 100%;
+    width: 100%;
+  }
+
+  .title-modal {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .body-modal {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .footer-modal {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: auto 16px;
+  }
+
+  .content {
+    z-index: 9;
+    flex-grow: 1;
+    .card-superior-info {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      .title {
+        font-family: "Mulish", sans-serif;
+        font-size: 1.5em;
+        line-height: 100%;
+        font-weight: 800;
+        &::first-letter {
+          text-transform: uppercase;
+        }
+      }
+
+      .price {
+        color: var(--ion-color-primary);
+        font-size: 1.2em;
+        font-family: "Mulish";
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%;
+        opacity: 0.72;
+        text-align: right;
+      }
+
+      .type {
+        background: var(--ion-color-secondary-tint);
+        padding: 4px 8px;
+        text-transform: capitalize;
+        color: var(--ion-color-secondary-contrast);
+        font-size: 1.1em;
+        font-family: "Mulish" !important;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%;
+        text-align: right;
+        border-radius: 6px;
+      }
+    }
+    .locale {
+      font-family: "Questrial", sans-serif !important;
+      font-size: 1em;
+      font-weight: 400;
+      text-transform: unset;
+      opacity: 0.8;
+      color: var(--ion-color-medium);
+      line-height: 100%;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+    .descriprion {
+      font-size: 1.1em;
+      line-height: 125%;
+      color: var(--ion-text-color);
+      opacity: 0.9;
+      margin-top: 24px;
+      p {
+        margin: 0;
+        &::first-letter {
+          text-transform: uppercase;
+        }
+      }
+    }
   }
 }
 </style>

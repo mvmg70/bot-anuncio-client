@@ -9,6 +9,24 @@
         <ion-title>
           {{ ads ? ads.title : "Carregando ..." }}
         </ion-title>
+
+        <ion-buttons slot="end">
+          <ion-button
+            v-if="ads"
+            color="light-gray"
+            fill="none"
+            class="only-icon"
+            @click="
+              share({
+                title: ads.title,
+                text: ads.title,
+                url: 'as',
+              })
+            "
+          >
+            <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -60,13 +78,6 @@
           </Splide>
         </div>
 
-        <!--
-        <ion-modal :is-open="isExpand" css-class="modal-imagem-expand" @didDismiss="isExpand = false">
-          <ion-content>
-            <img :src="imageExpand ? imageExpand : '/assets/logo/favicon-16x16.png'"  alt=""/>
-          </ion-content>
-        </ion-modal>
--->
         <div class="container">
           <div class="content">
             <div class="card-superior-info">
@@ -81,7 +92,10 @@
             <div v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">
               <div class="title-page left-text small">Pagamentos Aceitos:</div>
               <div class="container-box">
-                <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index">{{ isPaymentAccepted(item) }}</div>
+                <div class="box" v-for="(item, index) in ads.paymentAccepted" :key="index" :style="`color: ${isPaymentAccepted(item).color}; background: ${isPaymentAccepted(item).background}`">
+                  <img :src="isPaymentAccepted(item).image" alt="" />
+                  {{ isPaymentAccepted(item).label }}
+                </div>
               </div>
             </div>
 
@@ -131,17 +145,19 @@ export default defineComponent({
       isExpand: false,
       imageExpand: null,
       isLoading: false,
+      fullURL: "",
     };
   },
   async mounted() {
     this.isLoading = true;
     let req = await this.getAdsById(this.$route.params.id);
     if (req.status === 404 || (req.data && req.data.active !== "approved")) {
-      this.$router.replace({ name: "NotFound", params: { type: "ads" } });
+      this.$router.replace({ name: "NotFound" });
       return;
     }
 
     this.ads = req.data;
+    this.fullURL = new URL(location.href).href;
     this.moreViews(this.$route.params.id);
     this.isLoading = false;
   },
@@ -155,7 +171,6 @@ export default defineComponent({
       this.isExpand = true;
     },
     dateFormate(date) {
-      console.log(date);
       return moment(date).format("LLLL");
     },
   },
@@ -181,28 +196,8 @@ export default defineComponent({
     }
   }
 
-  .container-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
   .title-page {
     margin-bottom: 8px;
-  }
-  .box {
-    border: 1px solid rgba(var(--ion-color-medium-rgb), 0.35);
-    box-sizing: border-box;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transition: all 0.35s;
-    width: auto;
-    font-size: 0.8em;
-    color: var(--ion-color-primary);
-    padding: 8px 16px;
   }
 
   .content {
