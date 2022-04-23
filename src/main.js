@@ -81,12 +81,12 @@ const app = createApp(App)
                     text: "Venda, compre, doe e muito mais! Mostre seu anúncio ao mundo",
                 },
                 networks: [
-                    { url: "", network: "facebook", name: "Facebook", icon: "http://localhost:8100/assets/icons/facebook.png" },
-                    { url: "", network: "linkedin", name: "LinkedIn", icon: "http://localhost:8100/assets/icons/linkedin.png" },
-                    { url: "", network: "messenger", name: "Messenger", icon: "http://localhost:8100/assets/icons/messenger.png" },
-                    { url: "", network: "telegram", name: "Telegram", icon: "http://localhost:8100/assets/icons/telegram.png" },
-                    { url: "", network: "twitter", name: "Twitter", icon: "http://localhost:8100/assets/icons/twitter.png" },
-                    { url: "", network: "whatsapp", name: "Whatsapp", icon: "http://localhost:8100/assets/icons/whatsapp.png" },
+                    { url: "", network: "facebook", name: "Facebook", icon: "https://botanuncio.com.br/assets/icons/facebook.png" },
+                    { url: "", network: "linkedin", name: "LinkedIn", icon: "https://botanuncio.com.br/assets/icons/linkedin.png" },
+                    { url: "", network: "messenger", name: "Messenger", icon: "https://botanuncio.com.br/assets/icons/messenger.png" },
+                    { url: "", network: "telegram", name: "Telegram", icon: "https://botanuncio.com.br/assets/icons/telegram.png" },
+                    { url: "", network: "twitter", name: "Twitter", icon: "https://botanuncio.com.br/assets/icons/twitter.png" },
+                    { url: "", network: "whatsapp", name: "Whatsapp", icon: "https://botanuncio.com.br/assets/icons/whatsapp.png" },
                 ],
             };
         },
