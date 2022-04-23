@@ -17,10 +17,10 @@
             fill="none"
             class="only-icon"
             @click="
-              share({
+              localSocialShare({
                 title: ads.title,
-                text: ads.title,
-                url: 'as',
+                text: ads.description,
+                url: fullURL,
               })
             "
           >
@@ -47,9 +47,13 @@
               </div>
             </div>
 
-            <div class="locale"><ion-skeleton-text animated style="width: 200px; height: 16px"></ion-skeleton-text></div>
+            <div class="locale">
+              <ion-skeleton-text animated style="width: 200px; height: 16px"></ion-skeleton-text>
+            </div>
 
-            <div class="title-page left-text small"><ion-skeleton-text animated style="width: 150px; height: 16px"></ion-skeleton-text></div>
+            <div class="title-page left-text small">
+              <ion-skeleton-text animated style="width: 150px; height: 16px"></ion-skeleton-text>
+            </div>
             <div class="container-box">
               <ion-skeleton-text animated style="width: 100px; height: 32px"></ion-skeleton-text>
               <ion-skeleton-text animated style="width: 60px; height: 32px"></ion-skeleton-text>
@@ -82,8 +86,12 @@
           <div class="content">
             <div class="card-superior-info">
               <div class="title">{{ ads.title }}</div>
-              <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">{{ printMoney(ads.price, ads.type) }}</div>
-              <div class="type" v-else>{{ isTypeTransaction(ads.type) }}</div>
+              <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">
+                {{ printMoney(ads.price, ads.type) }}
+              </div>
+              <div class="type" v-else :style="`color: ${isTypeTransaction(ads.type).color}; background-color: ${isTypeTransaction(ads.type).bg}`">
+                {{ isTypeTransaction(ads.type).labelView }}
+              </div>
             </div>
 
             <div class="locale">{{ getAdress(ads.locale) }}</div>
@@ -105,6 +113,24 @@
           </div>
         </div>
       </section>
+
+      <!-- Share Modal -->
+      <ion-modal :is-open="socialShareOpem" @didDismiss="socialShareOpem = false" :breakpoints="[0, 0.3, 0.4]" :initialBreakpoint="0.3" class="modalSocialShare">
+        <ion-content>
+          <div class="title-page">Compartilhe com os amigos</div>
+          <div class="box-social">
+            <a v-for="social in networks" :key="social.name" class="link" :href="social.url" target="_blank" rel="noopener noreferrer">
+              <img :src="social.icon" :alt="social.name" />
+            </a>
+          </div>
+          <div class="box-copy">
+            <div class="link">
+              {{ socialShareValues.url }}
+            </div>
+            <ion-button @click="copyToClipboard(socialShareValues.url)"> Copiar </ion-button>
+          </div>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -141,6 +167,7 @@ export default defineComponent({
           },
         },
       },
+      socialShareOpem: false,
       ads: null,
       isExpand: false,
       imageExpand: null,
@@ -172,6 +199,10 @@ export default defineComponent({
     },
     dateFormate(date) {
       return moment(date).format("LLLL");
+    },
+    async localSocialShare(data) {
+      let social = await this.socialShare(data);
+      if (social) this.socialShareOpem = true;
     },
   },
 });

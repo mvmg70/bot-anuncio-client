@@ -75,6 +75,19 @@ const app = createApp(App)
                     height: 0,
                 },
                 textPrint: "",
+                socialShareValues: {
+                    url: "https://botanuncio.com.br/",
+                    title: "BotAnuncio — Anuncie com facilidade!",
+                    text: "Venda, compre, doe e muito mais! Mostre seu anúncio ao mundo",
+                },
+                networks: [
+                    { url: "", network: "facebook", name: "Facebook", icon: "https://botanuncio.com.br/assets/icons/facebook.png" },
+                    { url: "", network: "linkedin", name: "LinkedIn", icon: "https://botanuncio.com.br/assets/icons/linkedin.png" },
+                    { url: "", network: "messenger", name: "Messenger", icon: "https://botanuncio.com.br/assets/icons/messenger.png" },
+                    { url: "", network: "telegram", name: "Telegram", icon: "https://botanuncio.com.br/assets/icons/telegram.png" },
+                    { url: "", network: "twitter", name: "Twitter", icon: "https://botanuncio.com.br/assets/icons/twitter.png" },
+                    { url: "", network: "whatsapp", name: "Whatsapp", icon: "https://botanuncio.com.br/assets/icons/whatsapp.png" },
+                ],
             };
         },
         created() {
@@ -154,17 +167,46 @@ const app = createApp(App)
             async socialShare(data) {
                 const shareData = {
                     title: data.title,
-                    text: data.text,
+                    text: data.text.length > 150 ? `${data.text.substr(0, 150)}...` : data.text,
                     url: data.url,
                 };
 
-                try {
-                    await navigator.share(shareData);
-                } catch (err) {
-                    this.textPrint = "error:  " + err;
-                }
+                if (navigator.canShare) {
+                    await navigator.share(shareData).catch((error) => console.log(error));
+                } else {
+                    let defaultUrl = [
+                        "https://www.facebook.com/sharer/sharer.php?u=CHANGE_URL&title=CHANGE_TITILE&description=CHANGE_DESCRIPTION",
+                        "https://www.linkedin.com/sharing/share-offsite/?url=CHANGE_URL",
+                        "fb-messenger://share/?link=CHANGE_URL",
+                        "https://t.me/share/url?url=CHANGE_URL&text=CHANGE_TITILE%0D%0ACHANGE_DESCRIPTION",
+                        "https://twitter.com/intent/tweet?text=CHANGE_TITILE&url=CHANGE_URL&hashtags=@hCHANGE_TITILEu",
+                        "https://api.whatsapp.com/send?text=CHANGE_TITILE%0D%0ACHANGE_URL%0D%0ACHANGE_DESCRIPTION",
+                    ];
+                    let index = 0;
+                    defaultUrl.forEach((element) => {
+                        let link = element.replace(/CHANGE_URL/g, shareData.url);
+                        link = link.replace(/CHANGE_TITILE/g, shareData.title);
+                        link = link.replace(/CHANGE_DESCRIPTION/g, shareData.text);
+                        this.networks[index].url = link;
+                        index++;
+                    });
 
-                this.textPrint = "MDN compartilhado com sucesso!";
+                    this.socialShareValues = shareData;
+                    return true;
+                }
+                return false;
+            },
+            copyToClipboard(text) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text);
+                } else {
+                    var dummy = document.createElement("textarea");
+                    document.body.appendChild(dummy);
+                    dummy.value = text;
+                    dummy.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(dummy);
+                }
             },
 
             async saveSettings() {

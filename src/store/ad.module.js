@@ -1,4 +1,4 @@
-import {get, post, deleteAd } from "@/services/api.service";
+import {get, post, deleteAd, path } from "@/services/api.service";
 
 export const adStore = {
     namespaced: true,
@@ -40,8 +40,16 @@ export const adStore = {
         },
 
         // eslint-disable-next-line no-empty-pattern
-        async saveAds({}, data) {
-            let response = await post(`users/${data.id}/advertisings`, data.ads);
+        async saveAds({ rootState }, data) {
+            let userID = rootState.user.current.id;
+            let response = await post(`users/${userID}/advertisings`, data);
+            return response;
+        },
+
+        // eslint-disable-next-line no-empty-pattern
+        async aditAds({ rootState }, data) {
+            let userID = rootState.user.current.id;
+            let response = await path(`users/${userID}/advertisings`, data);
             return response;
         },
 

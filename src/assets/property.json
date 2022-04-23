@@ -17,7 +17,7 @@
         },
         {
             "value": "rent",
-            "labelPublish": "Aluguar",
+            "labelPublish": "Alugar",
             "labelView": "Alugo",
             "color": "#4B4B4B",
             "bg": "#82CDFF",
@@ -25,7 +25,7 @@
         },
         {
             "value": "rentWant",
-            "labelPublish": "Aluguar",
+            "labelPublish": "",
             "labelView": "Busco para alugar",
             "color": "#4B4B4B",
             "bg": "#77DCF2",
@@ -78,11 +78,27 @@
             "color": "",
             "bg": "#F2A516",
             "onPublish": true
+        },
+        {
+            "value": "search",
+            "labelPublish": "Procurar",
+            "labelView": "Procuro",
+            "color": "",
+            "bg": "",
+            "onPublish": true
         }
     ],
     "paymentsAccepted": [{
+            "value": "bitcoin",
+            "label": "Bitcoin",
+            "color": "",
+            "background": "",
+            "image": "https://botanuncio.com.br/assets/icons/bitcoin.png",
+            "onPublish": true
+        },
+        {
             "value": "pix",
-            "label": "Pix",
+            "label": "PIX",
             "color": "",
             "background": "",
             "image": "https://botanuncio.com.br/assets/icons/pix.png",
@@ -102,14 +118,6 @@
             "color": "",
             "background": "",
             "image": "https://botanuncio.com.br/assets/icons/card.png",
-            "onPublish": true
-        },
-        {
-            "value": "bitcoin",
-            "label": "Bitcoin",
-            "color": "",
-            "background": "",
-            "image": "https://botanuncio.com.br/assets/icons/bitcoin.png",
             "onPublish": true
         },
         {
