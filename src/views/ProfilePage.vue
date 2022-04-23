@@ -483,7 +483,7 @@ export default defineComponent({
   .hero-background {
     height: 250px;
     width: 100%;
-    background-image: url("../assets/images/bgGradient.png");
+    background-image: url("../assets/images/bgGradient.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
