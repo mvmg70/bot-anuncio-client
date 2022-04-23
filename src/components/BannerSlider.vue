@@ -50,6 +50,7 @@ export default {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  background-color: #b8b8b820;
   @media screen and (min-width: 1024px) {
     padding-top: calc((350 / 1280) * 100%);
   }

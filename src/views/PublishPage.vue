@@ -136,7 +136,7 @@
             <transition name="slide-x-left">
               <div class="form-6" v-if="formView == 6">
                 <ion-item class="custon-input" mode="md" lines="none">
-                  <ion-label>Qual o valor?</ion-label>
+                  <ion-label>Qual o valor do anúncio, em Reais (R$)?</ion-label>
                   <p class="obs" v-if="form.priceVariable">Como seu anúncio tem vários valores, informe apenas o menor.</p>
 
                   <div class="input-container">
@@ -321,7 +321,7 @@ export default defineComponent({
 
         this.form.images = links;
 
-        await this.saveAds({ ads: this.form, id: this.currentUser.id });
+        await this.saveAds(this.form);
         this.formView += 1;
         await loading.dismiss();
       } else if (this.formView == 5 && (this.form.type === "donate" || this.form.type === "notice" || this.form.type === "recommendation")) {

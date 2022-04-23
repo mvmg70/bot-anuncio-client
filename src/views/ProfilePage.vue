@@ -9,7 +9,7 @@
         <ion-title> Perfil </ion-title>
 
         <ion-buttons slot="end">
-          <ion-button color="light-gray" fill="none" class="only-icon" @click="socialShareOpem = true">
+          <ion-button color="light-gray" fill="none" class="only-icon">
             <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -111,11 +111,6 @@
         </div>
       </section>
 
-      <!-- Share Modal -->
-      <ion-modal :is-open="socialShareOpem" :breakpoints="[0.1, 0.5, 1]" :initialBreakpoint="0.5" @didDismiss="socialShareOpem = false">
-        <ion-content>Modal Content</ion-content>
-      </ion-modal>
-
       <!-- Edit Modal -->
       <ion-modal :is-open="viewOpem" @didDismiss="viewOpem = false" class="viewAD">
         <ion-content>
@@ -172,6 +167,14 @@
               </div>
             </section>
             <section class="footer-modal">
+              <div class="price" v-if="isChangeValue">
+                <div class="input-container">
+                  <ion-input placeholder="R$ 99,99" type="text" v-model="viewAd.price"></ion-input>
+                </div>
+              </div>
+              <ion-button color="success" size="small" @click="isChangeValue = true" v-if="!isChangeValue"> Editar </ion-button>
+              <ion-button color="success" size="small" @click="saveAd()" v-if="isChangeValue"> Salvar </ion-button>
+
               <ion-button color="danger" size="small" @click="deleteAd(viewAd.id)"> Deletar </ion-button>
             </section>
           </div>
@@ -248,6 +251,7 @@ import { mapActions, mapGetters } from "vuex";
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import moment from "moment";
+moment.locale("pt-BR");
 import md5 from "md5";
 
 export default defineComponent({
@@ -255,10 +259,10 @@ export default defineComponent({
   components: { Splide, SplideSlide },
   data() {
     return {
-      socialShareOpem: false,
       viewOpem: false,
       completeOpem: false,
       completeStep: 2,
+      isChangeValue: false,
       viewAd: {},
       user: {
         phone: "",
@@ -292,7 +296,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions("user", ["getMyAds", "update"]),
-    ...mapActions("ad", ["deleteAds"]),
+    ...mapActions("ad", ["deleteAds", "aditAds"]),
     getImageLink() {
       if (this.currentUser.photoURL) return this.currentUser.photoURL;
 
@@ -400,6 +404,27 @@ export default defineComponent({
             });
         }
       }
+    },
+    async saveAd() {
+      const loading = await loadingController.create({
+        cssClass: "load-custom",
+        spinner: "circular",
+      });
+      await loading.present();
+      await this.aditAds({
+        id: this.viewAd.id,
+        price: Number(this.viewAd.price),
+      })
+        .then(() => {
+          this.getMyAds();
+          this.viewOpem = false;
+          this.isChangeValue = false;
+          this.openToast("Anúncio editado com sucesso!");
+          loading.dismiss();
+        })
+        .catch(() => {
+          this.openToast("Não foi possível editar o anúncio, tente novamante mais tarde.");
+        });
     },
     getAdress(locale) {
       return `${locale.logradouro}, ${locale.bairro} - ${locale.localidade}`;

@@ -358,3 +358,72 @@ ul.splide__pagination {
     opacity: 0.25;
     margin: 16px 0;
 }
+
+.modalSocialShare {
+    .title-page {
+        font-size: 1.2em;
+    }
+    .box-social {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-flow: row wrap;
+        gap: 12px;
+        margin: 48px auto 0;
+        width: 100%;
+        max-width: 450px;
+        .link {
+            height: 48px;
+            width: 48px;
+            border-radius: 50%;
+            text-decoration: none;
+            background-color: rgba(var(--ion-color-dark-rgb), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.35s;
+            &:hover {
+                background-color: rgba(var(--ion-color-primary-rgb), 0.35);
+            }
+            img {
+                width: 20px;
+                height: 20px;
+                object-fit: cover;
+            }
+        }
+    }
+    .box-copy {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        border: 1px solid rgba(var(--ion-color-dark-rgb), 0.35);
+        border-radius: 11px;
+        height: 48px;
+        overflow: hidden;
+        margin: 32px auto;
+        width: 100%;
+        max-width: 450px;
+        padding: 0;
+        .link {
+            height: 100%;
+            font-size: 1.1em;
+            opacity: 0.8;
+            color: var(--ion-color-dark);
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            user-select: text;
+        }
+        ion-button {
+            margin: 0 1px 0 0;
+            height: 44px;
+        }
+    }
+}
