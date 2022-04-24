@@ -585,8 +585,6 @@ export default defineComponent({
         spinner: "circular",
       });
       await loading.present();
-      console.log(this.viewAd);
-      console.log(this.editAD);
       if (this.viewAd.price > 0 && Number(this.editAD.price) >= 0) {
         this.openToast("Preço inválido");
         loading.dismiss();

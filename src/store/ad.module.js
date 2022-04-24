@@ -42,7 +42,6 @@ export const adStore = {
 
             commit("START_LOAD_ADS");
             var ads = await get("advertisings", filter);
-            console.log(ads);
             if (ads.status === 200) commit("SET_ADS", ads.data);
             if (ads.status !== 200) commit("SET_ADS", {});
             commit("FINISH_LOAD_ADS");
