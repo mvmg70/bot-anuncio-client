@@ -174,6 +174,7 @@ export default defineComponent({
     height: 44px;
     z-index: 99999;
     background: var(--ion-toolbar-background);
+    box-shadow: 0px 100px 80px rgba(0, 0, 0, 0.07), 0px 11.5911px 10.0172px rgba(0, 0, 0, 0.035);
     @media screen and (max-width: 780px) {
       grid-template-columns: auto 1fr auto;
     }
@@ -210,7 +211,8 @@ export default defineComponent({
   .cards-content {
     margin-bottom: 48px;
     column-count: 4;
-    column-gap: 10px;
+    column-gap: 16px;
+    transition: all 0.35s;
     @media screen and (max-width: 1120px) {
       column-count: 3;
     }
@@ -241,9 +243,8 @@ export default defineComponent({
 <style lang="scss">
 ion-card.card-ad-content {
   cursor: pointer;
-  background: var(--ion-color-light-gray);
   border-radius: 12px;
-  box-shadow: none;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
   display: grid;
   margin: 0;
   grid-template-rows: auto;

@@ -91,7 +91,7 @@ export default {
       padding: 0;
       height: 32px;
       --border-radius: 8px;
-      --background: var(--ion-color-light-gray);
+      --background: var(--ion-color-light-shade);
       .searchbar-input-container.sc-ion-searchbar-ios {
         height: 32px !important;
       }
