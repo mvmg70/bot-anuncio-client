@@ -24,7 +24,7 @@
             <transition name="slide-x-left">
               <div class="form-1" v-if="formView == 1">
                 <ion-item class="custon-input" mode="md" lines="none">
-                  <ion-label>Qual CEP do seu anúncio?</ion-label>
+                  <ion-label>Qual o CEP melhor localiza sua área geográfica de atuação profissional?</ion-label>
                   <div class="input-container">
                     <ion-input placeholder="00000-000" autocomplete="postal-code" type="text" v-model="form.cep" clear-input></ion-input>
                     <ion-progress-bar type="indeterminate" v-if="load.cep"></ion-progress-bar>
@@ -54,7 +54,7 @@
                       </ion-col>
                       <ion-col size="12">
                         <ion-item class="custon-input" mode="md" lines="none">
-                          <ion-label>Bairro</ion-label>
+                          <ion-label>Logradouro, Bairro</ion-label>
                           <div class="input-container">
                             <ion-input type="text" v-model="getAdress" readonly></ion-input>
                           </div>
@@ -105,6 +105,7 @@
                   <div class="rect plus" v-if="form.images.length < 6">
                     <input type="file" @change="loadFiles" ref="ImagesAd" accept="image/*" />
                     <ion-icon :src="getIcon('addOutline')" size="large"></ion-icon>
+                    <div class="obs">Máximo 1MB</div>
                   </div>
                 </div>
               </div>
@@ -146,7 +147,7 @@
 
                 <transition name="expand-y">
                   <div v-if="form.price">
-                    <ion-label class="large left">Qual tipo do seu anúncio?</ion-label>
+                    <ion-label class="large left">Quais pamaentos você aceita?</ion-label>
                     <ion-grid>
                       <ion-row>
                         <ion-col size="6" v-for="(item, index) in paymentsValues" :key="index">
@@ -163,7 +164,7 @@
             </transition>
             <transition name="slide-x-left">
               <div class="form-7" v-if="formView == 7">
-                <ion-label class="large">Qual a abrangencia do anúncio?</ion-label>
+                <ion-label class="large">O anúncio será visível em qual área geográfica?</ion-label>
                 <ion-grid>
                   <ion-row>
                     <ion-col size="6" v-for="(item, index) in typeLocationValues" :key="index">
@@ -204,7 +205,7 @@
 </template>
 
 <script>
-import { loadingController } from "@ionic/vue";
+import { loadingController, toastController } from "@ionic/vue";
 import { mapActions, mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { getCEP } from "@/services/api.service";
@@ -259,7 +260,7 @@ export default defineComponent({
           title: "Internacional",
         },
       ],
-      formView: 1,
+      formView: 4,
       interval: null,
       timeBound: 500,
       imagesFile: [],
@@ -283,6 +284,13 @@ export default defineComponent({
   },
   methods: {
     ...mapActions("ad", ["saveAds"]),
+    async openToast(message) {
+      const toast = await toastController.create({
+        message: message,
+        duration: 4000,
+      });
+      return toast.present();
+    },
     stateLoad(model, status) {
       this.load[model] = status;
     },
@@ -346,6 +354,11 @@ export default defineComponent({
     },
     async loadFiles(e) {
       let file = e.target.files[0];
+
+      if (file.size > 1048576) {
+        this.openToast("O arquivo é muito grande, escolha outro com no máximo 1MB!");
+        return;
+      }
 
       if (this.form.images.length < 6) {
         this.form.images.push(URL.createObjectURL(file));
@@ -498,6 +511,15 @@ export default defineComponent({
           opacity: 0;
           overflow: hidden;
           z-index: 9;
+        }
+        .obs {
+          color: var(--ion-color-primary);
+          position: absolute;
+          bottom: 4px;
+          left: 4px;
+          margin: 0;
+          width: calc(100% - 8px);
+          text-align: center;
         }
       }
       img {

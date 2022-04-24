@@ -13,7 +13,11 @@ export const adStore = {
             let filter = {
                 filter: {
                     where: {
-                        and: [{ or: [{ typeLocation: "country" }, { typeLocation: "word" }] }, { active: "approved" }],
+                        and: [{
+                                or: [{ typeLocation: "country" }, { typeLocation: "word" }],
+                            },
+                            { active: "approved" },
+                        ],
                     },
                 },
             };
@@ -24,12 +28,22 @@ export const adStore = {
             }
             if (data.search) {
                 var pattern = `/.*${data.search}.*/i`;
-                filter.filter.where.and.push({ or: [{ title: { regexp: pattern } }, { description: { regexp: pattern } }] });
+                filter.filter.where.and.push({
+                    or: [
+                        { title: { regexp: pattern } },
+                        { description: { regexp: pattern } },
+                        { cep: { regexp: pattern } },
+                        { "locale.cep": { regexp: pattern } },
+                        { "locale.bairro": { regexp: pattern } },
+                        { "locale.logradouro": { regexp: pattern } },
+                    ],
+                });
             }
 
             commit("START_LOAD_ADS");
             var ads = await get("advertisings", filter);
-            commit("SET_ADS", ads.data);
+            if (ads.status === 200) commit("SET_ADS", ads.data);
+            if (ads.status !== 200) commit("SET_ADS", {});
             commit("FINISH_LOAD_ADS");
         },
 

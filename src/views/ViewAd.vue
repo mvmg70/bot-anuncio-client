@@ -77,7 +77,7 @@
         <div class="header-banner">
           <Splide :options="imagesOptions">
             <SplideSlide v-for="(image, index) in ads.images" :key="index">
-              <img :src="image" @click="expandImage(image)" alt="" />
+              <img :src="image" alt="" />
             </SplideSlide>
           </Splide>
         </div>
@@ -87,7 +87,7 @@
             <div class="card-superior-info">
               <div class="title">{{ ads.title }}</div>
               <div class="price" v-if="ads.type != 'donate' && ads.type != 'recommendation' && ads.type != 'notice'">
-                {{ printMoney(ads.price, ads.type) }}
+                {{ printMoney(ads.price, ads.type, ads.wantRent, ads.priceVariable) }}
               </div>
               <div class="type" v-else :style="`color: ${isTypeTransaction(ads.type).color}; background-color: ${isTypeTransaction(ads.type).bg}`">
                 {{ isTypeTransaction(ads.type).labelView }}
@@ -150,7 +150,7 @@ export default defineComponent({
     return {
       imagesOptions: {
         speed: 400,
-        height: "350px",
+        height: "250px",
         autoWidth: true,
         gap: 24,
         arrows: false,

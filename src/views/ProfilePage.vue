@@ -117,64 +117,236 @@
           <div class="content-modal">
             <section class="title-modal">
               <div class="title">{{ viewAd.title }}</div>
-              <ion-button color="danger" fill="solid" class="only-icon" @click="viewOpem = false">
-                <ion-icon :src="getIcon('addOutline')"></ion-icon>
-              </ion-button>
+              <div class="close-button" @click="viewOpem = false" />
             </section>
-            <section v-if="viewAd" class="body-modal">
-              <div class="header-banner">
-                <Splide :options="imagesOptions">
-                  <SplideSlide v-for="(image, index) in viewAd.images" :key="index">
-                    <img :src="image" @click="expandImage(image)" alt="" />
-                  </SplideSlide>
-                </Splide>
-              </div>
 
-              <div class="container">
-                <div class="content">
-                  <div class="card-superior-info">
-                    <div class="title">{{ viewAd.title }}</div>
-                    <div class="price" v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">{{ printMoney(viewAd.price, viewAd.type) }}</div>
-                    <div class="type" v-else>{{ isTypeTransaction(viewAd.type) }}</div>
+            <section class="body-modal">
+              <transition name="expand-y">
+                <div v-if="viewAd && isChangeValue" class="edit">
+                  <div class="container">
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>CEP</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.cep"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="8">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Cidade</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.locale.localidade"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                        <ion-col size="4">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Estado</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.locale.uf"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Logradouro, Bairro</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="getAdressEdit"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Título</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.title"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Descrição</ion-label>
+                            <div class="input-container">
+                              <ion-textarea rows="6" type="textarea" v-model="editAD.description"></ion-textarea>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12" disabled>
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label class="large">Imagens</ion-label>
+                            <div class="grid-images">
+                              <div class="rect" v-for="(image, index) in editAD.images" :key="index">
+                                <img :src="image" alt="" />
+                              </div>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Tipo do anúncio</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.type"></ion-input>
+                            </div>
+                          </ion-item>
+
+                          <transition name="expand-y">
+                            <ion-item class="custon-input check no-ripple" mode="md" lines="none" v-if="editAD.type == 'rent'" disabled>
+                              <ion-checkbox mode="md" v-model="editAD.wantRent"> </ion-checkbox>
+                              <ion-label> Estou buscando um aluguel </ion-label>
+                            </ion-item>
+                          </transition>
+                          <transition name="expand-y">
+                            <ion-item class="custon-input check no-ripple" mode="md" lines="none" v-if="editAD.type == 'sell'" disabled>
+                              <ion-checkbox mode="md" v-model="editAD.priceVariable"> </ion-checkbox>
+                              <ion-label> Esse anúncio tem vários valores. </ion-label>
+                            </ion-item>
+                          </transition>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none">
+                            <ion-label>Valor do anúncio</ion-label>
+                            <p class="obs" v-if="editAD.priceVariable">Esse é o menor valor do seu produto</p>
+
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.price"></ion-input>
+                            </div>
+                          </ion-item>
+
+                          <ion-label class="large left">Pagametos aceitos</ion-label>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Pagametos aceitos</ion-label>
+                            <div class="container-box">
+                              <div
+                                class="box"
+                                v-for="(item, index) in editAD.paymentAccepted"
+                                :key="index"
+                                :style="`color: ${isPaymentAccepted(item).color}; background: ${isPaymentAccepted(item).background}`"
+                              >
+                                <img :src="isPaymentAccepted(item).image" alt="" />
+                                {{ isPaymentAccepted(item).label }}
+                              </div>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12">
+                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                            <ion-label>Visibilidade do anúncio</ion-label>
+                            <div class="input-container">
+                              <ion-input type="text" v-model="editAD.typeLocation"></ion-input>
+                            </div>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+                </div>
+              </transition>
+
+              <transition name="expand-y">
+                <div v-if="viewAd && !isChangeValue">
+                  <div class="header-banner">
+                    <Splide :options="imagesOptions">
+                      <SplideSlide v-for="(image, index) in viewAd.images" :key="index">
+                        <img :src="image" alt="" />
+                      </SplideSlide>
+                    </Splide>
                   </div>
 
-                  <div class="locale">{{ getAdress(viewAd.locale) }}</div>
-                  <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(viewAd.created_at) }}</div>
-
-                  <div v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">
-                    <div class="title-page left-text small">Pagamentos Aceitos:</div>
-                    <div class="container-box">
-                      <div
-                        class="box"
-                        v-for="(item, index) in viewAd.paymentAccepted"
-                        :key="index"
-                        :style="`color: ${isPaymentAccepted(item).color}; background: ${isPaymentAccepted(item).background}`"
-                      >
-                        <img :src="isPaymentAccepted(item).image" alt="" />
-                        {{ isPaymentAccepted(item).label }}
+                  <div class="container">
+                    <div class="content">
+                      <div class="card-superior-info">
+                        <div class="title">{{ viewAd.title }}</div>
+                        <div class="price" v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">
+                          {{ printMoney(viewAd.price, viewAd.type, viewAd.wantRent, viewAd.priceVariable) }}
+                        </div>
+                        <div class="type" v-else>{{ isTypeTransaction(viewAd.type) }}</div>
                       </div>
+
+                      <div class="locale">{{ getAdress(viewAd.locale) }}</div>
+                      <div class="mb-4 title-page left-text small">Publicado em: {{ dateFormate(viewAd.created_at) }}</div>
+
+                      <div v-if="viewAd.type != 'donate' && viewAd.type != 'recommendation' && viewAd.type != 'notice'">
+                        <div class="title-page left-text small">Pagamentos Aceitos:</div>
+                        <div class="container-box">
+                          <div
+                            class="box"
+                            v-for="(item, index) in viewAd.paymentAccepted"
+                            :key="index"
+                            :style="`color: ${isPaymentAccepted(item).color}; background: ${isPaymentAccepted(item).background}`"
+                          >
+                            <img :src="isPaymentAccepted(item).image" alt="" />
+                            {{ isPaymentAccepted(item).label }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="descriprion">
+                        <p>{{ viewAd.description }}</p>
+                      </div>
+
+                      <div class="divider"></div>
+
+                      <ion-list lines="full" class="table-list">
+                        <ion-item>
+                          <ion-label class="ion-text-wrap">
+                            <b>Status do anúncio</b>
+                            <p>{{ status(viewAd.active) }}</p>
+                          </ion-label>
+                        </ion-item>
+
+                        <ion-item>
+                          <ion-label class="ion-text-wrap">
+                            <b>Total de vizualização</b>
+                            <p>{{ viewAd.views }}</p>
+                          </ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label class="ion-text-wrap">
+                            <b>Última vez vizualização</b>
+                            <p>{{ dateFormate(viewAd.updated_at) }}</p>
+                          </ion-label>
+                        </ion-item>
+                        <ion-item lines="none">
+                          <ion-label class="ion-text-wrap">
+                            <b>Data de publicação</b>
+                            <p>{{ dateFormate(viewAd.created_at) }}</p>
+                          </ion-label>
+                        </ion-item>
+                      </ion-list>
                     </div>
                   </div>
-
-                  <div class="descriprion">
-                    <p>{{ viewAd.description }}</p>
-                  </div>
-
-                  <div class="divider"></div>
-
-                  <div class="mb-4 title-page left-text small">Visto pela ultima vez: {{ dateFormate(viewAd.updated_at) }}</div>
                 </div>
-              </div>
+              </transition>
             </section>
-            <section class="footer-modal">
-              <div class="price" v-if="isChangeValue">
-                <div class="input-container">
-                  <ion-input placeholder="R$ 99,99" type="text" v-model="viewAd.price"></ion-input>
-                </div>
-              </div>
-              <ion-button color="success" size="small" @click="isChangeValue = true" v-if="!isChangeValue"> Editar </ion-button>
-              <ion-button color="success" size="small" @click="saveAd()" v-if="isChangeValue"> Salvar </ion-button>
 
+            <section class="footer-modal">
+              <ion-button color="success" size="small" @click="showEdit()" v-if="!isChangeValue"> Editar </ion-button>
+              <ion-button color="dark" fill="none" size="small" @click="cancelEdit()" v-if="isChangeValue"> Cancelar </ion-button>
+              <div class="spacer"></div>
+              <ion-button color="success" size="small" @click="saveEdit()" v-if="isChangeValue"> Salvar </ion-button>
               <ion-button color="danger" size="small" @click="deleteAd(viewAd.id)"> Deletar </ion-button>
             </section>
           </div>
@@ -264,6 +436,7 @@ export default defineComponent({
       completeStep: 2,
       isChangeValue: false,
       viewAd: {},
+      editAD: {},
       user: {
         phone: "",
         has_whatsapp: false,
@@ -272,7 +445,7 @@ export default defineComponent({
       },
       imagesOptions: {
         speed: 400,
-        height: "350px",
+        height: "250px",
         autoWidth: true,
         gap: 24,
         arrows: false,
@@ -280,14 +453,6 @@ export default defineComponent({
         focus: "center",
         trimSpace: true,
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-        breakpoints: {
-          780: {
-            height: "200px",
-          },
-          1024: {
-            height: "250px",
-          },
-        },
       },
     };
   },
@@ -335,8 +500,17 @@ export default defineComponent({
       this.completeOpem = true;
     },
     opemViewAd(ad) {
+      this.cancelEdit();
       this.viewAd = ad;
       this.viewOpem = true;
+    },
+    showEdit() {
+      this.editAD = JSON.parse(JSON.stringify(this.viewAd));
+      this.isChangeValue = true;
+    },
+    cancelEdit() {
+      this.editAD = {};
+      this.isChangeValue = false;
     },
     async nextStep() {
       const loading = await loadingController.create({
@@ -405,24 +579,29 @@ export default defineComponent({
         }
       }
     },
-    async saveAd() {
+    async saveEdit() {
       const loading = await loadingController.create({
         cssClass: "load-custom",
         spinner: "circular",
       });
       await loading.present();
+      if (this.viewAd.price > 0 && Number(this.editAD.price) >= 0) {
+        this.openToast("Preço inválido");
+        loading.dismiss();
+        return;
+      }
       await this.aditAds({
         id: this.viewAd.id,
-        price: Number(this.viewAd.price),
+        price: Number(this.editAD.price),
       })
         .then(() => {
           this.getMyAds();
-          this.viewOpem = false;
-          this.isChangeValue = false;
+          this.cancelEdit();
           this.openToast("Anúncio editado com sucesso!");
           loading.dismiss();
         })
         .catch(() => {
+          loading.dismiss();
           this.openToast("Não foi possível editar o anúncio, tente novamante mais tarde.");
         });
     },
@@ -464,6 +643,9 @@ export default defineComponent({
       if (this.currentUser.phone) progress += 0.5;
       if (this.currentUser.bithday) progress += 0.5;
       return progress;
+    },
+    getAdressEdit() {
+      return `${this.editAD.locale.logradouro}, ${this.editAD.locale.bairro}`;
     },
   },
 });
@@ -660,12 +842,14 @@ export default defineComponent({
       position: absolute;
       top: 8px;
       left: 8px;
-      font-size: 1em;
-      color: var(--ion-color-dark-contrast);
-      text-shadow: 0 0 5px var(--ion-color-medium);
+      font-size: 0.8em;
       display: flex;
       align-items: center;
       gap: 6px;
+      background-color: rgba(var(--ion-color-primary-rgb), 0.75);
+      color: var(--ion-color-primary-contrast);
+      padding: 4px;
+      border-radius: 4px;
     }
     .isActive {
       position: absolute;
@@ -748,6 +932,11 @@ export default defineComponent({
 }
 
 .viewAD {
+  @media only screen and (min-width: 768px) and (min-height: 768px) {
+    --width: 650px;
+    --height: 90%;
+  }
+
   .content-modal {
     display: flex;
     align-items: stretch;
@@ -763,21 +952,81 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid rgba(var(--ion-color-dark-rgb), 0.1);
+    padding: 0 0 16px 0;
   }
 
   .body-modal {
     flex-grow: 1;
     overflow-y: auto;
+    padding-bottom: 24px;
+    position: relative;
+    .container {
+      max-width: 650px;
+    }
+    .edit {
+      padding: 24px 0;
+      .container {
+        max-width: 450px;
+      }
+
+      .grid-images {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-gap: 1rem;
+        .rect {
+          border: 1px solid #a7b6be;
+          color: #a7b6be;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          padding: 1rem;
+          overflow: hidden;
+          &::before {
+            content: "";
+            padding-bottom: 100%;
+          }
+          img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+          }
+        }
+      }
+    }
+    .header-banner {
+      border-radius: 12px;
+      width: 100%;
+      margin: 32px 0 64px;
+
+      .splide__track {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      img {
+        cursor: pointer;
+        height: 100%;
+        margin: 0 auto;
+        border-radius: 12px;
+      }
+    }
   }
 
   .footer-modal {
     width: 100%;
-    height: 44px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 8px;
-    padding: auto 16px;
+    padding: 16px 0 0 0;
+    border-top: 1px solid rgba(var(--ion-color-dark-rgb), 0.1);
   }
 
   .content {
