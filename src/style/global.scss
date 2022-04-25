@@ -267,7 +267,9 @@ ul.splide__pagination {
     ion-label {
         font-size: 0.9em;
         font-weight: 500;
-        margin: 0 0 2px;
+        margin: 0 0 4px;
+        max-width: 100% !important;
+        white-space: normal !important;
     }
 }
 
