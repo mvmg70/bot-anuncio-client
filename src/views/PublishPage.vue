@@ -26,7 +26,7 @@
                 <ion-item class="custon-input" mode="md" lines="none">
                   <ion-label>Qual o CEP melhor localiza sua área geográfica de atuação profissional?</ion-label>
                   <div class="input-container">
-                    <ion-input placeholder="00000-000" autocomplete="postal-code" type="text" v-model="form.cep" clear-input></ion-input>
+                    <ion-input placeholder="#####-###" inputmode="numeric" maxlength="8" autocomplete="postal-code" type="text" v-model="form.cep" clear-input></ion-input>
                     <ion-progress-bar type="indeterminate" v-if="load.cep"></ion-progress-bar>
                   </div>
                   <div class="botton-slot">
@@ -79,7 +79,7 @@
                 <ion-item class="custon-input" mode="md" lines="none">
                   <ion-label>Título do anúncio</ion-label>
                   <div class="input-container">
-                    <ion-input :placeholder="dynamicPlaceholder('title')" autocomplete="title" type="text" v-model="form.title"></ion-input>
+                    <ion-input :placeholder="dynamicPlaceholder('title')" autocomplete="title" type="text" v-model="form.title" clear-input></ion-input>
                   </div>
                 </ion-item>
               </div>
