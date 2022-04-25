@@ -33,9 +33,9 @@ export const adStore = {
                         { title: { regexp: pattern } },
                         { description: { regexp: pattern } },
                         { cep: { regexp: pattern } },
-                        { "locale.cep": { regexp: pattern } },
-                        { "locale.bairro": { regexp: pattern } },
-                        { "locale.logradouro": { regexp: pattern } },
+                        { "locale.cep": data.search },
+                        { "locale.bairro": data.search },
+                        { "locale.logradouro": data.search },
                     ],
                 });
             }
