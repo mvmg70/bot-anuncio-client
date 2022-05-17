@@ -1,81 +1,98 @@
 <template>
-  <div :class="{ skeleton: isLoad }">
-    <ion-card class="card-ad-content" v-if="isLoad">
-      <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-
-      <ion-card-header>
-        <div class="left-side">
-          <ion-card-title><ion-skeleton-text animated style="width: 60%"></ion-skeleton-text></ion-card-title>
-          <ion-card-subtitle><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></ion-card-subtitle>
-        </div>
-        <div class="price"><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></div>
-      </ion-card-header>
-
-      <ion-card-content>
-        <p>
-          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width: 90%"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-        </p>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card class="card-ad-content" v-if="!isLoad">
-      <ion-img :src="item.images[0]"></ion-img>
-
-      <ion-card-header>
-        <div class="left-side">
-          <ion-card-title>{{ item.title }}</ion-card-title>
-          <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
-        </div>
-        <div class="price" v-if="item.type != 'donate' || item.typeAd != 'recommendation' || item.typeAd != 'notice'">{{ printMoney(item.price) }}</div>
-        <div class="type" v-else>{{ isTypeTransaction(item.type) }}</div>
-      </ion-card-header>
-
-      <ion-card-content>
-        <p>
-          {{ item.description }}
-        </p>
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <ion-card class="card-content">
+    <div class="cover">
+      <img :src="adsData.images[0]" alt="" />
+      <div class="type" :style="`color: ${isTypeTransaction(adsData.type).color}; background-color: ${isTypeTransaction(adsData.type).bg}`">
+        {{ isTypeTransaction(adsData.type).labelView }}
+      </div>
+    </div>
+    <ion-card-header>
+      <div class="left-side">
+        <ion-card-title>{{ adsData.title }}</ion-card-title>
+        <ion-card-subtitle>{{ getAdress(adsData.locale) }}</ion-card-subtitle>
+      </div>
+      <div class="price" v-if="adsData.type !== 'donate' && adsData.type !== 'recommendation' && adsData.type !== 'notice'">
+        {{ printMoney(adsData.price) }}
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text>
+        <p>{{ strip(adsData.description) }}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
 </template>
 
 <script>
 export default {
   name: "CardItem",
-  adsData: {
-    type: Object,
-    default: () => {},
+  props: {
+    adsData: {
+      type: Object,
+      default: () => {},
+    },
   },
-  isLoad: {
-    type: Boolean,
-    default: false,
+  methods: {
+    getAdress(locale) {
+      return `${locale.logradouro}, ${locale.bairro} - ${locale.localidade}`;
+    },
   },
 };
 </script>
 
 <style lang="scss">
-ion-card.card-ad-content {
-  margin: 0;
-  background: var(--ion-color-light-gray);
+ion-card.card-content {
+  cursor: pointer;
   border-radius: 12px;
-  box-shadow: none;
-  ion-img {
-    border-radius: 12px;
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-flow: column nowrap;
+  margin: 0;
+  grid-template-rows: auto;
+  margin-bottom: 16px;
+  width: 100%;
+  .cover {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
     overflow: hidden;
-    max-height: 350px;
+    img {
+      border-radius: 8px;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      background-color: rgba(var(--ion-color-dark-rgb), 0.2);
+    }
+    .type {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      padding: 4px 8px;
+      text-transform: capitalize;
+      background: var(--ion-color-secondary-tint);
+      color: var(--ion-color-secondary-contrast);
+      line-height: 90%;
+      font-size: 0.95em;
+      font-family: "Mulish" !important;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 100%;
+      text-align: left;
+      border-radius: 0 6px 6px 0;
+    }
   }
 
   ion-card-header {
-    padding: 12px;
+    padding: 8px 8px 12px;
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    flex-flow: column nowrap;
     gap: 8px;
-    .left-side {
-      flex-grow: 1;
-    }
     ion-card-title {
       font-family: "Mulish", sans-serif;
       font-size: 1.5em;
@@ -87,51 +104,39 @@ ion-card.card-ad-content {
       font-weight: 400;
       text-transform: unset;
       opacity: 0.8;
-      color: var(--ion-color-medium);
+      color: var(--ion-color-dark);
       line-height: 100%;
+      margin-top: 6px;
     }
 
     .price {
       color: var(--ion-color-primary);
-      font-size: 1.2em;
+      font-size: 1.5em;
       font-family: "Mulish";
       font-style: normal;
       font-weight: 700;
       line-height: 100%;
-      opacity: 0.72;
-      text-align: right;
-    }
-
-    .type {
-      background: var(--ion-color-secondary-tint);
-      padding: 4px 24px 4px 8px;
-      text-transform: capitalize;
-      color: var(--ion-color-secondary-contrast);
-      font-size: 1.1em;
-      font-family: "Mulish" !important;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 100%;
-      text-align: right;
-      border-radius: 6px;
-      margin-right: -24px !important;
+      opacity: 0.85;
+      text-align: left;
     }
   }
 
   ion-card-content {
+    font-family: "Questrial", sans-serif !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 1.1em;
-    line-height: 110%;
-    color: var(--ion-color-medium);
-    opacity: 0.8;
+    padding: 0 8px 12px;
+    color: var(--ion-color-dark);
     p {
+      opacity: 0.8;
+      line-height: 110%;
+      font-size: 1em;
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 2; /* number of lines to show */
-      line-clamp: 2;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
     }
   }

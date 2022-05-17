@@ -24,6 +24,7 @@ import * as IonComponents from "@ionic/vue";
 import * as allIcons from "ionicons/icons";
 
 import { createMetaManager } from "vue-meta";
+import MasonryWall from "@yeger/vue-masonry-wall";
 import property from "./assets/property.json";
 
 /* Core CSS required for Ionic components to work properly */
@@ -54,6 +55,7 @@ const app = createApp(App)
     .use(IonicVue)
     .use(router)
     .use(store)
+    .use(MasonryWall)
     .use(createMetaManager())
     .mixin({
         data() {
@@ -207,6 +209,11 @@ const app = createApp(App)
                     document.execCommand("copy");
                     document.body.removeChild(dummy);
                 }
+            },
+
+            strip(html) {
+                let doc = new DOMParser().parseFromString(html, "text/html");
+                return doc.body.textContent || "";
             },
 
             async saveSettings() {

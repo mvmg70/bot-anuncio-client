@@ -40,28 +40,11 @@
 
         <div class="container" v-if="allAds">
           <div class="cards-content">
-            <ion-card class="card-ad-content" @click="opemAd(item.id)" v-for="item in allAds" :key="item.id">
-              <div class="cover">
-                <ion-img :src="item.images[0]" alt=""></ion-img>
-                <div class="type" :style="`color: ${isTypeTransaction(item.type).color}; background-color: ${isTypeTransaction(item.type).bg}`">
-                  {{ isTypeTransaction(item.type).labelView }}
-                </div>
-              </div>
-              <ion-card-header>
-                <div class="left-side">
-                  <ion-card-title>{{ item.title }}</ion-card-title>
-                  <ion-card-subtitle>{{ getAdress(item.locale) }}</ion-card-subtitle>
-                </div>
-                <div class="price" v-if="item.type !== 'donate' && item.type !== 'recommendation' && item.type !== 'notice'">
-                  {{ printMoney(item.price) }}
-                </div>
-              </ion-card-header>
-              <ion-card-content>
-                <ion-text>
-                  <p>{{ item.description }}</p>
-                </ion-text>
-              </ion-card-content>
-            </ion-card>
+            <masonry-wall :items="allAds" :column-width="300" :padding="16" style="display: flex; gap: 16px">
+              <template #default="{ item }">
+                <CardItem :adsData="item" @click="opemAd(item.id)" />
+              </template>
+            </masonry-wall>
           </div>
         </div>
 
@@ -88,9 +71,10 @@ import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import Banner from "../components/BannerSlider.vue";
 import Logo from "../components/LogoInline.vue";
 import SearchBar from "../components/SearchBar.vue";
+import CardItem from "../components/CardItem.vue";
 
 export default defineComponent({
-  components: { Logo, Banner, Splide, SplideSlide, SearchBar },
+  components: { Logo, Banner, Splide, SplideSlide, SearchBar, CardItem },
   name: "HomePage",
   data() {
     return {
@@ -208,22 +192,6 @@ export default defineComponent({
     }
   }
 
-  .cards-content {
-    margin-bottom: 48px;
-    column-count: 4;
-    column-gap: 16px;
-    transition: all 0.35s;
-    @media screen and (max-width: 1120px) {
-      column-count: 3;
-    }
-    @media screen and (max-width: 920px) {
-      column-count: 2;
-    }
-    @media screen and (max-width: 680px) {
-      column-count: 1;
-    }
-  }
-
   .no-ad {
     text-align: center;
     padding: 48px auto;
@@ -239,99 +207,17 @@ export default defineComponent({
   }
 }
 </style>
-
 <style lang="scss">
-ion-card.card-ad-content {
-  cursor: pointer;
-  border-radius: 12px;
-  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
-  display: grid;
-  margin: 0;
-  grid-template-rows: auto;
-  margin-bottom: 16px;
-  break-inside: avoid;
-  .cover {
-    position: relative;
-    ion-img {
-      border-radius: 8px;
-      overflow: hidden;
-      max-height: 500px;
-      width: 100%;
-      min-height: 75px;
-      background-color: rgba(var(--ion-color-dark-rgb), 0.2);
-      background-image: url("https://botanuncio.com.br/assets/logo/android-chrome-72x72.png");
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    .type {
-      position: absolute;
-      bottom: 12px;
-      left: 0;
-      padding: 4px 8px;
-      text-transform: capitalize;
-      background: var(--ion-color-secondary-tint);
-      color: var(--ion-color-secondary-contrast);
-      line-height: 90%;
-      font-size: 0.95em;
-      font-family: "Mulish" !important;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 100%;
-      text-align: left;
-      border-radius: 0 6px 6px 0;
-    }
-  }
-
-  ion-card-header {
-    padding: 8px 8px 12px;
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 8px;
-    ion-card-title {
-      font-family: "Mulish", sans-serif;
-      font-size: 1.5em;
-      line-height: 100%;
-    }
-    ion-card-subtitle {
-      font-family: "Questrial", sans-serif !important;
-      font-size: 1em;
-      font-weight: 400;
-      text-transform: unset;
-      opacity: 0.8;
-      color: var(--ion-color-dark);
-      line-height: 100%;
-      margin-top: 6px;
-    }
-
-    .price {
-      color: var(--ion-color-primary);
-      font-size: 1.5em;
-      font-family: "Mulish";
-      font-style: normal;
-      font-weight: 700;
-      line-height: 100%;
-      opacity: 0.85;
-      text-align: left;
-    }
-  }
-
-  ion-card-content {
-    font-family: "Questrial", sans-serif !important;
-    font-style: normal;
-    font-weight: 400;
-    padding: 0 8px 12px;
-    color: var(--ion-color-dark);
-    p {
-      opacity: 0.8;
-      line-height: 110%;
-      font-size: 1em;
-      margin: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      line-clamp: 3;
-      -webkit-box-orient: vertical;
+.cards-content {
+  margin-bottom: 48px;
+  width: 100%;
+  .masonry-wall {
+    width: 100% !important;
+    .masonry-column {
+      width: 100% !important;
+      .masonry-item {
+        width: 100%;
+      }
     }
   }
 }

@@ -86,12 +86,10 @@
             </transition>
             <transition name="slide-x-left">
               <div class="form-3" v-if="formView == 3">
-                <ion-item class="custon-input" mode="md" lines="none">
-                  <ion-label>Escreva sobre seu anúncio</ion-label>
-                  <div class="input-container">
-                    <ion-textarea rows="6" :placeholder="dynamicPlaceholder('description')" autocomplete="textarea" type="textarea" v-model="form.description"></ion-textarea>
-                  </div>
-                </ion-item>
+                <ion-label class="left">Escreva sobre seu anúncio</ion-label>
+                <div>
+                  <TextEditor v-model="form.description" @characterCount="setSizeEditor" />
+                </div>
               </div>
             </transition>
             <transition name="slide-x-left">
@@ -105,7 +103,7 @@
                   <div class="rect plus" v-if="form.images.length < 6">
                     <input type="file" @change="loadFiles" ref="ImagesAd" accept="image/*" />
                     <ion-icon :src="getIcon('addOutline')" size="large"></ion-icon>
-                    <div class="obs">Máximo 1MB</div>
+                    <div class="obs">Máximo 10MB</div>
                   </div>
                 </div>
               </div>
@@ -211,10 +209,12 @@ import { defineComponent } from "vue";
 import { getCEP } from "@/services/api.service";
 import { upload } from "../services/upload.service";
 import { mask } from "vue-the-mask";
+import TextEditor from "../components/TextEditor.vue";
 
 export default defineComponent({
   name: "PublishPage",
   directives: { mask },
+  components: { TextEditor },
   data() {
     return {
       load: {
@@ -264,6 +264,7 @@ export default defineComponent({
       interval: null,
       timeBound: 500,
       imagesFile: [],
+      editorSize: 0,
     };
   },
   mounted() {
@@ -355,8 +356,8 @@ export default defineComponent({
     async loadFiles(e) {
       let file = e.target.files[0];
 
-      if (file.size > 1048576) {
-        this.openToast("O arquivo é muito grande, escolha outro com no máximo 1MB!");
+      if (file.size > 10485760) {
+        this.openToast("O arquivo é muito grande, escolha outro com no máximo 10MB!");
         return;
       }
 
@@ -381,13 +382,16 @@ export default defineComponent({
       if (this.form.paymentAccepted.indexOf(value) != -1) return true;
       return false;
     },
+    setSizeEditor(value) {
+      this.editorSize = Number(value);
+    },
   },
   computed: {
     ...mapGetters("user", ["currentUser"]),
     isNextDisabled() {
       if (this.formView == 1 && this.form.locale.localidade) return false;
       if (this.formView == 2 && this.form.title) return false;
-      if (this.formView == 3 && this.form.description) return false;
+      if (this.formView == 3 && this.editorSize >= 100) return false;
       if (this.formView == 4 && this.form.images.length >= 1) return false;
       if (this.formView == 5 && this.form.type) return false;
       if (this.formView == 6 && this.form.price && this.form.paymentAccepted.length >= 1) return false;
@@ -416,8 +420,8 @@ export default defineComponent({
   }
 
   .container-form {
-    width: 400px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 700px;
     height: 100%;
     overflow-y: visible;
     overflow-x: hidden;
@@ -459,9 +463,11 @@ export default defineComponent({
     .form-6,
     .form-7 {
       width: 100%;
-      min-width: 350px;
       flex-grow: 1;
-      text-align: center;
+      max-width: 400px;
+    }
+    .form-3 {
+      max-width: none;
     }
   }
 

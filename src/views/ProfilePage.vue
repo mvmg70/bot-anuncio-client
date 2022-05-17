@@ -9,8 +9,8 @@
         <ion-title> Perfil </ion-title>
 
         <ion-buttons slot="end">
-          <ion-button color="light-gray" fill="none" class="only-icon">
-            <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
+          <ion-button @click="deslogar()" color="dark">
+            <ion-icon :src="getIcon('logOutOutline')"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -117,7 +117,26 @@
           <div class="content-modal">
             <section class="title-modal">
               <div class="title">{{ viewAd.title }}</div>
-              <div class="close-button" @click="viewOpem = false" />
+
+              <div class="line-buttons">
+                <ion-button
+                  color="light-gray"
+                  fill="none"
+                  class="only-icon"
+                  @click="
+                    localSocialShare({
+                      title: viewAd.title,
+                      text: viewAd.description,
+                      url: fullURL,
+                    })
+                  "
+                >
+                  <ion-icon :src="getIcon('shareSocialOutline')"></ion-icon>
+                </ion-button>
+                <ion-button color="light-gray" fill="none" class="only-icon" @click="viewOpem = false">
+                  <ion-icon :src="getIcon('closeOutline')"></ion-icon>
+                </ion-button>
+              </div>
             </section>
 
             <section class="body-modal">
@@ -175,11 +194,9 @@
                       </ion-row>
                       <ion-row>
                         <ion-col size="12">
-                          <ion-item class="custon-input" mode="md" lines="none" disabled>
+                          <ion-item class="custon-input" mode="md" lines="none">
                             <ion-label>Descrição</ion-label>
-                            <div class="input-container">
-                              <ion-textarea rows="6" type="textarea" v-model="editAD.description"></ion-textarea>
-                            </div>
+                            <TextEditor v-model="editAD.description" @characterCount="2000" />
                           </ion-item>
                         </ion-col>
                       </ion-row>
@@ -304,7 +321,7 @@
                       </div>
 
                       <div class="descriprion">
-                        <p>{{ viewAd.description }}</p>
+                        <p v-html="viewAd.description"></p>
                       </div>
 
                       <div class="divider"></div>
@@ -411,6 +428,24 @@
           </div>
         </ion-content>
       </ion-modal>
+
+      <!-- Share Modal -->
+      <ion-modal :is-open="socialShareOpem" @didDismiss="socialShareOpem = false" :breakpoints="[0, 0.3, 0.4]" :initialBreakpoint="0.3" class="modalSocialShare">
+        <ion-content>
+          <div class="title-page">Compartilhe com os amigos</div>
+          <div class="box-social">
+            <a v-for="social in networks" :key="social.name" class="link" :href="social.url" target="_blank" rel="noopener noreferrer">
+              <img :src="social.icon" :alt="social.name" />
+            </a>
+          </div>
+          <div class="box-copy">
+            <div class="link">
+              {{ socialShareValues.url }}
+            </div>
+            <ion-button @click="copyToClipboard(socialShareValues.url)"> Copiar </ion-button>
+          </div>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
@@ -425,16 +460,18 @@ import "@splidejs/splide/dist/css/themes/splide-skyblue.min.css";
 import moment from "moment";
 moment.locale("pt-BR");
 import md5 from "md5";
+import TextEditor from "../components/TextEditor.vue";
 
 export default defineComponent({
   name: "ProfilePage",
-  components: { Splide, SplideSlide },
+  components: { Splide, SplideSlide, TextEditor },
   data() {
     return {
       viewOpem: false,
       completeOpem: false,
       completeStep: 2,
       isChangeValue: false,
+      socialShareOpem: false,
       viewAd: {},
       editAD: {},
       user: {
@@ -635,6 +672,10 @@ export default defineComponent({
       });
       return toast.present();
     },
+    async localSocialShare(data) {
+      let social = await this.socialShare(data);
+      if (social) this.socialShareOpem = true;
+    },
   },
   computed: {
     ...mapGetters("user", ["userLocale", "allMyAds", "isLoadingMyAds", "isLoadingUser", "currentUser"]),
@@ -646,6 +687,10 @@ export default defineComponent({
     },
     getAdressEdit() {
       return `${this.editAD.locale.logradouro}, ${this.editAD.locale.bairro}`;
+    },
+    fullURL() {
+      let url = new URL(location.href).origin;
+      return `${url}/ads/${this.viewAd.id}`;
     },
   },
 });
@@ -814,6 +859,7 @@ export default defineComponent({
     margin: 0;
     padding-top: 100%;
     position: relative;
+    cursor: pointer;
     img {
       position: absolute;
       top: 0;
@@ -1097,5 +1143,12 @@ export default defineComponent({
       }
     }
   }
+}
+
+.line-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 }
 </style>
