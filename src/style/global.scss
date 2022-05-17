@@ -1,13 +1,17 @@
 * {
     font-family: "Mulish", sans-serif !important;
     box-sizing: border-box !important;
+}
+
+.inner-scroll,
+* {
     &::-webkit-scrollbar {
-        width: 0px;
-        height: 0px;
+        width: 0px !important;
+        height: 0px !important;
     }
     &::-webkit-scrollbar-button {
-        width: 0;
-        height: 0;
+        width: 0 !important;
+        height: 0 !important;
     }
     &::-webkit-scrollbar-thumb {
         background: #e1e1e1;
@@ -110,22 +114,12 @@ ion-toggle {
 .only-icon {
     height: 32px;
     width: 32px;
-}
-
-.close-button {
-    height: 32px;
-    width: 32px;
-    background-color: transparent;
-    background-image: url("../assets//images/close.svg");
-    background-position: center;
-    background-size: 80%;
-    background-repeat: no-repeat;
-    transition: all 0.35s;
-    border-radius: 6px;
-    &:hover {
-        background-color: #b4b4b420;
-        cursor: pointer;
-    }
+    --padding-start: 6px;
+    --padding-end: 6px;
+    --padding-top: 6px;
+    --padding-bottom: 6px;
+    --border-radius: 6px;
+    margin: 0;
 }
 
 .only-avatar {
@@ -449,4 +443,8 @@ ul.splide__pagination {
 
 .table-list {
     border-radius: 12px;
+}
+
+.descriprion {
+    user-select: text;
 }

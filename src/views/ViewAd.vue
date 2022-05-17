@@ -108,7 +108,7 @@
             </div>
 
             <div class="descriprion">
-              <p>{{ ads.description }}</p>
+              <p v-html="ads.description"></p>
             </div>
           </div>
         </div>
