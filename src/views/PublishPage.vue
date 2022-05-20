@@ -317,7 +317,7 @@ export default defineComponent({
         });
         await loading.present();
 
-        this.form.price = parseInt(this.form.price);
+        this.form.price = +this.form.price;
 
         var images = this.imagesFile;
         var links = [];
