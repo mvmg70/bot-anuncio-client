@@ -260,7 +260,7 @@ export default defineComponent({
           title: "Internacional",
         },
       ],
-      formView: 0,
+      formView: 1,
       interval: null,
       timeBound: 500,
       imagesFile: [],
