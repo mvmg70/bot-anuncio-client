@@ -230,7 +230,7 @@ export default defineComponent({
         description: null,
         images: [],
         type: null,
-        price: 10,
+        price: null,
         paymentAccepted: [],
         typeLocation: null,
         wantRent: false,
@@ -260,7 +260,7 @@ export default defineComponent({
           title: "Internacional",
         },
       ],
-      formView: 1,
+      formView: 6,
       interval: null,
       timeBound: 500,
       imagesFile: [],
@@ -317,7 +317,7 @@ export default defineComponent({
         });
         await loading.present();
 
-        this.form.price = +this.form.price;
+        this.form.price = Number(this.form.price.replace(",", "."));
 
         var images = this.imagesFile;
         var links = [];
