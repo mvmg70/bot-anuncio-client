@@ -149,7 +149,7 @@ export default {
   data() {
     return {
       editor: null,
-      limit: 2000,
+      limit: 500000,
       minimun: 100,
       textSelect: "normal",
     };

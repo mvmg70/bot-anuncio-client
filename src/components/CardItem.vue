@@ -10,6 +10,9 @@
       <div class="left-side">
         <ion-card-title>{{ adsData.title }}</ion-card-title>
         <ion-card-subtitle>{{ getAdress(adsData.locale) }}</ion-card-subtitle>
+        <div class="distance">
+          {{ this.getDistanceFromLatLonInKm({ lat: userLocale.latitude, lng: userLocale.longitude }, { lat: adsData.locale.latitude, lng: adsData.locale.longitude }) }} Km de você
+        </div>
       </div>
       <div class="price" v-if="adsData.type !== 'donate' && adsData.type !== 'recommendation' && adsData.type !== 'notice'">
         {{ printMoney(adsData.price) }}
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "CardItem",
   props: {
@@ -36,6 +41,9 @@ export default {
     getAdress(locale) {
       return `${locale.logradouro}, ${locale.bairro} - ${locale.localidade}`;
     },
+  },
+  computed: {
+    ...mapGetters("user", ["userLocale"]),
   },
 };
 </script>
@@ -50,7 +58,8 @@ ion-card.card-content {
   margin: 0;
   grid-template-rows: auto;
   margin-bottom: 16px;
-  width: 100%;
+  width: 100% !important;
+  overflow: hidden;
   .cover {
     position: relative;
     width: 100%;
@@ -118,6 +127,17 @@ ion-card.card-content {
       line-height: 100%;
       opacity: 0.85;
       text-align: left;
+    }
+
+    .distance {
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: flex;
+      font-weight: 700;
+      color: var(--ion-color-dark);
+      background: var(--ion-color-warning);
+      width: fit-content;
+      margin-bottom: 8px;
     }
   }
 

@@ -196,7 +196,7 @@
                         <ion-col size="12">
                           <ion-item class="custon-input" mode="md" lines="none">
                             <ion-label>Descrição</ion-label>
-                            <TextEditor v-model="editAD.description" @characterCount="2000" />
+                            <TextEditor v-model="editAD.description" @characterCount="500000" />
                           </ion-item>
                         </ion-col>
                       </ion-row>
@@ -617,12 +617,15 @@ export default defineComponent({
       }
     },
     async saveEdit() {
+      console.log(this.editAD);
+      console.log(this.viewAd);
+
       const loading = await loadingController.create({
         cssClass: "load-custom",
         spinner: "circular",
       });
       await loading.present();
-      if (this.viewAd.price > 0 && Number(this.editAD.price) >= 0) {
+      if (Number(this.editAD.price) < 0 || !this.editAD.price) {
         this.openToast("Preço inválido");
         loading.dismiss();
         return;
