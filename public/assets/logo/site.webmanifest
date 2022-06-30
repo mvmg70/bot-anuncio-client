@@ -1,6 +1,11 @@
 {
     "name": "BotAnuncio — Anuncie com facilidade!",
     "short_name": "BotAnuncio",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "start_url": "https://botanuncio.com.br/",
+    "display": "standalone",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "/assets/logo/android-chrome-36x36.png?v=1",
@@ -29,9 +34,8 @@
         },
         {
             "src": "/assets/logo/android-chrome-192x192.png?v=1",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "tamanhos": "192x192",
+            "tipo": "image/png"
         },
         {
             "src": "/assets/logo/android-chrome-256x256.png?v=1",
@@ -46,12 +50,44 @@
         {
             "src": "/assets/logo/android-chrome-512x512.png?v=1",
             "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/screenshot-1.png",
+            "sizes": "1280x800",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/screenshot-2.png",
+            "sizes": "750x1334",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/screenshot-3.png",
+            "sizes": "1280x800",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/screenshot-4.png",
+            "sizes": "750x1334",
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "start_url": "https://botanuncio.com.br/",
-    "display": "standalone",
-    "orientation": "portrait"
+    "shortcuts": [
+        {
+            "name": "Adicionar Anúncio",
+            "short_name": "Anunciar",
+            "description": "Crie um novo anúncio facilmente",
+            "url": "/publish",
+            "icons": [
+                {
+                    "src": "/assets/logo/android-chrome-192x192.png?v=1",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
 }

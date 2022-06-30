@@ -207,6 +207,7 @@ export default defineComponent({
   }
 }
 </style>
+
 <style lang="scss">
 .cards-content {
   margin-bottom: 48px;
@@ -216,7 +217,8 @@ export default defineComponent({
     .masonry-column {
       width: 100% !important;
       .masonry-item {
-        width: 100%;
+        width: 100% !important;
+        overflow: hidden;
       }
     }
   }
