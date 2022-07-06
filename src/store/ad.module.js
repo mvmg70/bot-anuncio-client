@@ -65,7 +65,7 @@ export const adStore = {
     // eslint-disable-next-line no-empty-pattern
     async aditAds({ rootState }, data) {
       let userID = rootState.user.current.id;
-      let response = await path(`users/${userID}/advertisings`, data);
+      let response = await path(`users/${userID}/advertisings/${data.id}`, data);
       return response;
     },
 

@@ -36,6 +36,7 @@
         "core-js": "^3.6.5",
         "firebase": "^9.6.10",
         "lodash": "^4.17.21",
+        "maska": "^1.5.0",
         "md5": "^2.3.0",
         "moment": "^2.29.1",
         "register-service-worker": "^1.7.2",
