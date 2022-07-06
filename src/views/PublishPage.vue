@@ -207,13 +207,11 @@ import { loadingController, toastController } from "@ionic/vue";
 import { mapActions, mapGetters } from "vuex";
 import { defineComponent } from "vue";
 import { getCEP } from "@/services/api.service";
-import { upload } from "../services/upload.service";
-import { mask } from "vue-the-mask";
-import TextEditor from "../components/TextEditor.vue";
+import { upload } from "@/services/upload.service";
+import TextEditor from "@/components/TextEditor.vue";
 
 export default defineComponent({
   name: "PublishPage",
-  directives: { mask },
   components: { TextEditor },
   data() {
     return {
